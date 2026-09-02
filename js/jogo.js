@@ -734,7 +734,7 @@
     no.className = `numero-flutuante ${classe}`;
     no.textContent = texto;
     caixa.appendChild(no);
-    setTimeout(() => no.remove(), 980);
+    setTimeout(() => no.remove(), 1500);
   }
 
   function animar(el, classe, ms) {
@@ -756,7 +756,7 @@
     preenchimento.style.transform = `scaleX(${pct})`;
     meter.setAttribute("aria-valuemax", String(maximo));
     meter.setAttribute("aria-valuenow", String(atual));
-    txt.textContent = String(atual);
+    txt.textContent = `${atual}/${maximo}`;
     if (barraPai) barraPai.classList.toggle("is-baixa", pct <= 0.3);
   }
 
@@ -1013,21 +1013,21 @@
       await animar(elAtor, "is-magia", 420);
       if (estado.audio) estado.audio.hit();
       vibrar(ator.chefe ? 28 : 18);
-      const hit = animar(elAlvo, "is-hit", 360);
-      const treme = tremerArena();
-      await Promise.all([hit, treme]);
+      soltarNumero(
+        ladoAlvo,
+        `−${resultado.dano}`,
+        resultado.bloqueado ? "numero-flutuante--guarda" : "numero-flutuante--magia"
+      );
       const extra = resultado.bloqueado ? ` ${TEXTO.escudoAbsorveu}` : "";
       if (atorChave === "jogador") {
         relatar(`${TEXTO.voceMagia(resultado.dano, alvo.nome)}${extra}`);
       } else {
         relatar(`${TEXTO.inimigoMagia(ator.nome, ator.magia.nome, resultado.dano)}${extra}`);
       }
-      soltarNumero(
-        ladoAlvo,
-        `−${resultado.dano}`,
-        resultado.bloqueado ? "numero-flutuante--guarda" : "numero-flutuante--magia"
-      );
       pintarHud();
+      const hit = animar(elAlvo, "is-hit", 420);
+      const treme = tremerArena();
+      await Promise.all([hit, treme]);
       return;
     }
 
@@ -1037,22 +1037,22 @@
     await animar(elAtor, "is-ataque", 380);
     if (estado.audio) estado.audio.hit();
     vibrar(ator.chefe ? 22 : 12);
-    const hit = animar(elAlvo, "is-hit", 340);
-    const treme = tremerArena();
-    await Promise.all([hit, treme]);
-    const partes = [];
-    if (atorChave === "jogador") partes.push(TEXTO.voceAtacou(resultado.dano, alvo.nome));
-    else partes.push(TEXTO.inimigoAtacou(ator.nome, resultado.dano));
-    if (critico) partes.push(TEXTO.acertoPreciso);
-    if (resultado.bloqueado) partes.push(TEXTO.escudoAbsorveu);
-    relatar(partes.join(" "));
     const classeNum = critico
       ? "numero-flutuante--critico"
       : resultado.bloqueado
         ? "numero-flutuante--guarda"
         : "numero-flutuante--dano";
     soltarNumero(ladoAlvo, `−${resultado.dano}`, classeNum);
+    const partes = [];
+    if (atorChave === "jogador") partes.push(TEXTO.voceAtacou(resultado.dano, alvo.nome));
+    else partes.push(TEXTO.inimigoAtacou(ator.nome, resultado.dano));
+    if (critico) partes.push(TEXTO.acertoPreciso);
+    if (resultado.bloqueado) partes.push(TEXTO.escudoAbsorveu);
+    relatar(partes.join(" "));
     pintarHud();
+    const hit = animar(elAlvo, "is-hit", 400);
+    const treme = tremerArena();
+    await Promise.all([hit, treme]);
   }
 
   function algumMorreu() {
@@ -1217,6 +1217,7 @@
     estado.jogador.atingidoNestaRodada = false;
     estado.inimigo.atingidoNestaRodada = false;
     await resolverAcao("jogador", acao);
+    const recapJogador = els.relato.textContent;
     if (algumMorreu()) {
       encerrar(estado.inimigo.vida <= 0);
       return;
@@ -1226,6 +1227,7 @@
     await esperar(380);
     const acaoIA = escolherAcaoIA();
     await resolverAcao("inimigo", acaoIA);
+    const recapInimigo = els.relato.textContent;
     if (algumMorreu()) {
       encerrar(estado.inimigo.vida <= 0);
       return;
@@ -1239,7 +1241,7 @@
     estado.rodada += 1;
     els.txtVez.textContent = TEXTO.suaVez;
     pintarHud();
-    relatar(TEXTO.suaVezCurta);
+    relatar(`${recapJogador} ${recapInimigo}`);
     estado.ocupado = false;
     setBotoes(true);
     gravarCampanha();
