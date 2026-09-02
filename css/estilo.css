@@ -583,6 +583,7 @@ button:focus-visible {
   width: min(150px, 38vw);
   z-index: 2;
   transform-origin: center bottom;
+  overflow: visible;
 }
 
 .lutador--nara {
@@ -684,12 +685,20 @@ button:focus-visible {
 
 .flutuantes {
   position: absolute;
-  left: 50%;
-  top: 18%;
+  top: 14%;
   width: 0;
   height: 0;
   pointer-events: none;
   z-index: 6;
+  overflow: visible;
+}
+
+.lutador--nara .flutuantes {
+  left: 68%;
+}
+
+.lutador--inimigo .flutuantes {
+  left: 32%;
 }
 
 .numero-flutuante {
@@ -699,7 +708,7 @@ button:focus-visible {
   z-index: 5;
   transform: translate(-50%, 0);
   font-weight: 800;
-  font-size: 1.85rem;
+  font-size: 1.55rem;
   letter-spacing: 0.02em;
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.55), 0 0 12px rgba(0, 0, 0, 0.4);
   animation: sobe 1.45s ease forwards;
@@ -1035,6 +1044,10 @@ button:focus-visible {
   gap: 8px;
 }
 
+.app.is-tutorial .tela {
+  pointer-events: none;
+}
+
 .app.is-vitoria .modal__caixa--fim h2 {
   color: var(--ciano);
 }
@@ -1134,6 +1147,23 @@ button:focus-visible {
     padding-top: calc(62px + var(--safe-t));
     padding-left: calc(12px + var(--safe-l));
     padding-right: calc(12px + var(--safe-r));
+  }
+
+  .lutador--nara .flutuantes {
+    left: 78%;
+  }
+
+  .lutador--inimigo .flutuantes {
+    left: 22%;
+  }
+
+  .numero-flutuante {
+    font-size: 1.28rem;
+  }
+
+  .numero-flutuante--magia,
+  .numero-flutuante--critico {
+    font-size: 1.35rem;
   }
 
   .tela--descanso {

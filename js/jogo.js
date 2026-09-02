@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const VERSAO = "1.1.2";
+  const VERSAO = "1.1.3";
   const CHAVE = "duelo-rapido";
   const TOTAL_CIRCULOS = 10;
 
@@ -21,7 +21,7 @@
     acertoPreciso: "Acerto preciso!",
     escudoAbsorveu: "O escudo absorveu parte do golpe.",
     essenciaCurta: "Essência insuficiente para magia.",
-    recuouEssencia: (n) => `+${n} essência`,
+    recuouEssencia: (n) => `+${n}`,
     vitoria: "Vitória",
     derrota: "Derrota",
     campanhaVencida: "Campanha encerrada",
@@ -536,6 +536,8 @@
     melhorias: [],
     resultado: null,
     audio: null,
+    tutorialTravado: false,
+    ignorarTituloAte: 0,
   };
 
   function lerFlag(nome, padrao) {
@@ -1007,7 +1009,7 @@
         const roubo = Math.min(ator.magia.dreno, alvo.essencia);
         alvo.essencia -= roubo;
         ator.essencia = Math.min(ator.essenciaMax, ator.essencia + roubo);
-        if (roubo) soltarNumero(atorChave, `+${roubo} essência`, "numero-flutuante--cura");
+        if (roubo) soltarNumero(atorChave, `+${roubo}`, "numero-flutuante--cura");
       }
       if (estado.audio) estado.audio.magia();
       await animar(elAtor, "is-magia", 420);
@@ -1296,25 +1298,35 @@
 
   function mostrarTutorial(depois) {
     els.modalFim.hidden = true;
-    estado.aposTutorial = depois;
+    estado.aposTutorial = depois || novaCampanha;
+    estado.tutorialTravado = true;
+    els.app.classList.add("is-tutorial");
     els.modalTutorial.hidden = false;
     els.btnEntendi.disabled = true;
     /* Evita o toque em Começar/Nova cair no Entendi (mesmo lugar da tela). */
     window.setTimeout(() => {
       if (els.modalTutorial.hidden) return;
+      estado.tutorialTravado = false;
       els.btnEntendi.disabled = false;
       els.btnEntendi.focus();
-    }, 420);
+    }, 550);
   }
 
   function fecharTutorial() {
-    if (els.btnEntendi.disabled) return;
+    if (els.btnEntendi.disabled || estado.tutorialTravado) return;
+    if (els.modalTutorial.hidden) return;
+    estado.tutorialTravado = true;
     estado.viuTutorial = true;
     gravarFlag("tutorial", true);
-    els.modalTutorial.hidden = true;
+    estado.ignorarTituloAte = Date.now() + 900;
     const cb = estado.aposTutorial || novaCampanha;
     estado.aposTutorial = null;
     cb();
+    els.modalTutorial.hidden = true;
+    els.app.classList.remove("is-tutorial");
+    window.setTimeout(() => {
+      estado.tutorialTravado = false;
+    }, 900);
   }
 
   function garantirAudio() {
@@ -1331,19 +1343,28 @@
   }
 
   function ligarEventos() {
-    els.btnComecar.addEventListener("click", () => {
+    els.btnComecar.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      if (!els.modalTutorial.hidden) return;
       garantirAudio();
       mostrarTutorial(novaCampanha);
     });
     els.btnContinuar.addEventListener("click", () => {
+      if (!els.modalTutorial.hidden) return;
       garantirAudio();
       continuarCampanha();
     });
-    els.btnNova.addEventListener("click", () => {
+    els.btnNova.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      if (!els.modalTutorial.hidden) return;
       garantirAudio();
       mostrarTutorial(novaCampanha);
     });
-    els.btnEntendi.addEventListener("click", () => {
+    els.btnEntendi.addEventListener("click", (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
       garantirAudio();
       fecharTutorial();
     });
@@ -1386,10 +1407,14 @@
       }
       if (!els.modalTutorial.hidden && (ev.key === "Enter" || ev.key === " ")) {
         ev.preventDefault();
-        els.btnEntendi.click();
+        if (!els.btnEntendi.disabled) els.btnEntendi.click();
         return;
       }
       if (estado.tela === "titulo" && (ev.key === "Enter" || ev.key === " ")) {
+        if (!els.modalTutorial.hidden || Date.now() < estado.ignorarTituloAte) {
+          ev.preventDefault();
+          return;
+        }
         ev.preventDefault();
         if (!els.btnContinuar.hidden) els.btnContinuar.click();
         else els.btnComecar.click();
