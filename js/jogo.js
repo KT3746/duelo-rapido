@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const VERSAO = "1.1.1";
+  const VERSAO = "1.1.2";
   const CHAVE = "duelo-rapido";
   const TOTAL_CIRCULOS = 10;
 
@@ -1159,12 +1159,14 @@
     els.proximoNome.textContent = proximo.titulo;
     els.proximoNota.textContent = proximo.nota;
     els.melhorias.innerHTML = "";
-    estado.melhorias.forEach((m, idx) => {
+    estado.melhorias.forEach((m) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "melhoria";
       btn.dataset.melhoria = m.id;
-      btn.innerHTML = `<span class="melhoria__nome">${idx + 1}. ${m.nome}</span><span class="melhoria__desc">${m.detalhe(j)}</span>`;
+      const detalhe = m.detalhe(j);
+      btn.setAttribute("aria-label", `${m.nome}. ${detalhe}`);
+      btn.innerHTML = `<span class="melhoria__nome">${m.nome}</span><span class="melhoria__desc">${detalhe}</span>`;
       btn.addEventListener("click", () => escolherMelhoria(m.id));
       els.melhorias.appendChild(btn);
     });
@@ -1320,6 +1322,14 @@
     if (estado.audio) estado.audio.acordar();
   }
 
+  function combatePodeReceberAtalho() {
+    return estado.tela === "luta"
+      && !estado.ocupado
+      && els.modalFim.hidden
+      && els.modalTutorial.hidden
+      && els.telaDescanso.hidden;
+  }
+
   function ligarEventos() {
     els.btnComecar.addEventListener("click", () => {
       garantirAudio();
@@ -1385,25 +1395,14 @@
         else els.btnComecar.click();
         return;
       }
-      if (!els.modalFim.hidden && ev.key === "Enter") {
-        ev.preventDefault();
-        if (!els.btnRetry.hidden) els.btnRetry.click();
-        return;
-      }
-      if (estado.tela === "descanso" && !estado.ocupado) {
-        const mapaDescanso = { "1": 0, "2": 1, "3": 2 };
-        if (mapaDescanso[ev.key] !== undefined) {
+      const mapaLuta = { "1": "atacar", a: "atacar", A: "atacar", "2": "defender", d: "defender", D: "defender", "3": "magia", m: "magia", M: "magia" };
+      if (mapaLuta[ev.key]) {
+        if (!combatePodeReceberAtalho()) {
           ev.preventDefault();
-          const m = estado.melhorias[mapaDescanso[ev.key]];
-          if (m) escolherMelhoria(m.id);
+          return;
         }
-        return;
-      }
-      if (estado.tela !== "luta" || estado.ocupado || !els.modalFim.hidden) return;
-      const mapa = { "1": "atacar", a: "atacar", A: "atacar", "2": "defender", d: "defender", D: "defender", "3": "magia", m: "magia", M: "magia" };
-      if (mapa[ev.key]) {
         ev.preventDefault();
-        turnoJogador(mapa[ev.key]);
+        turnoJogador(mapaLuta[ev.key]);
       }
     });
   }
