@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const VERSAO = "1.0.0";
+  const VERSAO = "1.0.1";
   const CHAVE = "duelo-rapido";
 
   const TEXTO = {
@@ -158,6 +158,7 @@
       essenciaDefesa: modelo.essenciaDefesa,
       critico: modelo.critico,
       guarda: false,
+      atingidoNestaRodada: false,
       ultimaAcao: null,
       estilo: modelo.estilo || "jogador",
     };
@@ -343,6 +344,7 @@
   }
 
   function aplicarDano(alvo, bruto, perfuracao) {
+    alvo.atingidoNestaRodada = true;
     if (!alvo.guarda) {
       const dano = Math.max(1, bruto);
       alvo.vida = Math.max(0, alvo.vida - dano);
@@ -515,6 +517,8 @@
     }
     estado.ocupado = true;
     setBotoes(false);
+    estado.jogador.atingidoNestaRodada = false;
+    estado.inimigo.atingidoNestaRodada = false;
     await resolverAcao("jogador", acao);
     if (algumMorreu()) {
       encerrar(estado.inimigo.vida <= 0);
@@ -530,8 +534,10 @@
       return;
     }
 
-    if (estado.jogador.guarda && estado.inimigo.ultimaAcao !== "atacar" && estado.inimigo.ultimaAcao !== "magia") {
-      estado.jogador.guarda = false;
+    for (const lutador of [estado.jogador, estado.inimigo]) {
+      if (lutador.guarda && !lutador.atingidoNestaRodada) {
+        lutador.guarda = false;
+      }
     }
     estado.rodada += 1;
     els.txtVez.textContent = TEXTO.suaVez;
