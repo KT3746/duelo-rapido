@@ -1,4 +1,4 @@
-/* Duelo Rápido — arena, HUD e ações em celular e desktop. */
+/* Duelo Rápido — campanha de 10 círculos, HUD e ações em celular e desktop. */
 :root {
   --fundo: #0a0c14;
   --fundo-2: #14182a;
@@ -125,7 +125,7 @@ button:focus-visible {
 .titulo-art {
   position: relative;
   width: min(360px, 86vw);
-  height: 150px;
+  height: 168px;
   margin: 8px 0 4px;
 }
 
@@ -138,9 +138,9 @@ button:focus-visible {
 }
 
 .titulo-art__nara,
-.titulo-art__dagro {
+.titulo-art__rival {
   position: absolute;
-  bottom: 18px;
+  bottom: 32px;
   width: 54px;
   height: 92px;
   border-radius: 18px 18px 8px 8px;
@@ -153,7 +153,7 @@ button:focus-visible {
   animation: flutuatitulo 2.8s ease-in-out infinite;
 }
 
-.titulo-art__dagro {
+.titulo-art__rival {
   right: 18%;
   width: 66px;
   background: linear-gradient(180deg, #ffb089, #7a2b16);
@@ -161,8 +161,34 @@ button:focus-visible {
   animation: flutuatitulo 2.8s ease-in-out infinite 0.4s;
 }
 
+.titulo-art__pips {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.titulo-art__pips li {
+  flex: 1;
+  height: 7px;
+  border-radius: 99px;
+  background: rgba(243, 234, 216, 0.22);
+}
+
+.titulo-art__pips li.is-chefe {
+  background: var(--ouro);
+}
+
 .titulo-acoes {
   width: min(420px, 100%);
+  display: grid;
+  gap: 10px;
 }
 
 .titulo-dica {
@@ -209,11 +235,12 @@ button:focus-visible {
   position: fixed;
   top: calc(10px + var(--safe-t));
   right: calc(10px + var(--safe-r));
-  z-index: 20;
+  z-index: 40;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   min-height: 44px;
+  min-width: 44px;
   padding: 8px 12px;
   border: 1px solid var(--linha);
   border-radius: 999px;
@@ -234,11 +261,60 @@ button:focus-visible {
   box-shadow: 6px 0 0 #8a8172;
 }
 
-.tela--luta {
+/* Luta e descanso: espaço extra no topo para o botão Som não cobrir a placa do rival. */
+.tela--luta,
+.tela--descanso {
+  padding-top: calc(58px + var(--safe-t));
   gap: 10px;
   max-width: 1100px;
   margin: 0 auto;
   overflow-y: auto;
+}
+
+.campanha-barra {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 2px;
+}
+
+.campanha-barra__txt {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ouro);
+  font-weight: 800;
+}
+
+.pips {
+  display: flex;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: min(420px, 100%);
+}
+
+.pips li {
+  flex: 1;
+  height: 8px;
+  border-radius: 99px;
+  background: rgba(243, 234, 216, 0.16);
+}
+
+.pips li.is-feito {
+  background: var(--ciano);
+}
+
+.pips li.is-atual {
+  background: var(--ouro);
+  box-shadow: 0 0 10px rgba(232, 195, 106, 0.55);
+}
+
+.pips li.is-chefe:not(.is-feito):not(.is-atual) {
+  background: rgba(255, 106, 61, 0.45);
 }
 
 .hud {
@@ -274,6 +350,7 @@ button:focus-visible {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--areia-suave);
+  white-space: nowrap;
 }
 
 .placa--aliado {
@@ -282,6 +359,15 @@ button:focus-visible {
 
 .placa--inimigo {
   box-shadow: inset -3px 0 0 var(--brasa);
+}
+
+.placa--inimigo.is-chefe {
+  box-shadow: inset -3px 0 0 var(--ouro), 0 0 18px rgba(232, 195, 106, 0.18);
+}
+
+.placa--inimigo.is-chefe .placa__papel {
+  color: var(--ouro);
+  font-weight: 800;
 }
 
 .barra + .barra {
@@ -356,6 +442,71 @@ button:focus-visible {
     linear-gradient(180deg, #1c1630 0%, #241820 48%, #141018 100%);
 }
 
+.arena[data-tema="areia"] .arena__ceu {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(232, 195, 106, 0.22), transparent 30%),
+    radial-gradient(circle at 80% 18%, rgba(201, 148, 72, 0.18), transparent 26%);
+}
+
+.arena[data-tema="forja"] .arena__ceu {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 106, 61, 0.22), transparent 30%),
+    radial-gradient(circle at 80% 18%, rgba(255, 176, 80, 0.16), transparent 26%);
+}
+
+.arena[data-tema="sombra"] .arena__ceu {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(176, 140, 255, 0.22), transparent 30%),
+    radial-gradient(circle at 80% 18%, rgba(88, 40, 140, 0.28), transparent 26%);
+}
+
+.arena[data-tema="nevoa"] .arena__ceu {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(180, 210, 230, 0.2), transparent 32%),
+    radial-gradient(circle at 80% 18%, rgba(90, 120, 150, 0.22), transparent 26%);
+}
+
+.arena[data-tema="pedra"] .arena__ceu {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(196, 150, 90, 0.22), transparent 30%),
+    radial-gradient(circle at 80% 18%, rgba(80, 56, 32, 0.28), transparent 26%);
+}
+
+.arena[data-tema="geada"] .arena__ceu {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(160, 230, 255, 0.22), transparent 30%),
+    radial-gradient(circle at 80% 18%, rgba(90, 150, 220, 0.2), transparent 26%);
+}
+
+.arena[data-tema="fogo"] .arena__ceu {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 80, 50, 0.26), transparent 30%),
+    radial-gradient(circle at 80% 18%, rgba(255, 180, 40, 0.18), transparent 26%);
+}
+
+.arena[data-tema="fresta"] .arena__ceu {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(40, 180, 150, 0.2), transparent 30%),
+    radial-gradient(circle at 80% 18%, rgba(10, 40, 40, 0.35), transparent 26%);
+}
+
+.arena[data-tema="pacto"] .arena__ceu {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(232, 195, 106, 0.2), transparent 30%),
+    radial-gradient(circle at 80% 18%, rgba(80, 20, 20, 0.32), transparent 26%);
+}
+
+.arena[data-tema="eclipse"] .arena__ceu {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(232, 195, 106, 0.28), transparent 24%),
+    radial-gradient(circle at 20% 20%, rgba(176, 140, 255, 0.2), transparent 30%),
+    radial-gradient(circle at 80% 18%, rgba(20, 8, 28, 0.5), transparent 26%);
+}
+
+.arena.is-chefe {
+  box-shadow: inset 0 0 40px rgba(232, 195, 106, 0.12);
+}
+
 .arena__ceu {
   position: absolute;
   inset: 0;
@@ -407,6 +558,23 @@ button:focus-visible {
   box-shadow: 0 0 0 2px rgba(232, 195, 106, 0.12);
 }
 
+.arena__flash {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  opacity: 0;
+  background: rgba(255, 230, 210, 0.28);
+}
+
+.arena.is-flash .arena__flash {
+  animation: flash-arena 0.28s ease;
+}
+
+.arena.is-treme {
+  animation: treme 0.34s ease;
+}
+
 .lutador {
   position: absolute;
   bottom: 8%;
@@ -420,10 +588,13 @@ button:focus-visible {
   --dir: 1;
 }
 
-.lutador--dagro,
-.lutador--velin {
+.lutador--inimigo {
   right: 6%;
   --dir: -1;
+}
+
+.lutador--inimigo.is-chefe {
+  width: min(176px, 44vw);
 }
 
 .lutador__svg {
@@ -432,6 +603,10 @@ button:focus-visible {
   height: auto;
   filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.45));
   animation: idle 2.4s ease-in-out infinite;
+}
+
+.lutador__corpo {
+  width: 100%;
 }
 
 .lutador__sombra {
@@ -448,10 +623,11 @@ button:focus-visible {
 .lutador__guarda {
   position: absolute;
   inset: 8% 4% 10%;
-  border: 3px solid rgba(106, 168, 255, 0.0);
+  border: 3px solid rgba(106, 168, 255, 0);
   border-radius: 50%;
   pointer-events: none;
   opacity: 0;
+  z-index: 3;
 }
 
 .lutador.is-guarda .lutador__guarda {
@@ -463,6 +639,21 @@ button:focus-visible {
 .lutador--nara.is-guarda .lutador__guarda {
   border-color: rgba(58, 214, 196, 0.9);
   box-shadow: 0 0 18px rgba(58, 214, 196, 0.45);
+}
+
+.lutador__flash {
+  position: absolute;
+  inset: 12% 18% 8%;
+  border-radius: 18px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 3;
+  background: #fff;
+  mix-blend-mode: overlay;
+}
+
+.lutador.is-hit .lutador__flash {
+  animation: flash-hit 0.32s ease;
 }
 
 .lutador.is-ataque .lutador__svg {
@@ -483,7 +674,7 @@ button:focus-visible {
 }
 
 .nara-orbe,
-.velin-orbe {
+.rival-orbe {
   transform-box: fill-box;
   transform-origin: center;
   animation: pulsa 1.6s ease-in-out infinite;
@@ -496,6 +687,7 @@ button:focus-visible {
   width: 0;
   height: 0;
   pointer-events: none;
+  z-index: 6;
 }
 
 .numero-flutuante {
@@ -505,7 +697,7 @@ button:focus-visible {
   z-index: 5;
   transform: translate(-50%, 0);
   font-weight: 800;
-  font-size: 1.55rem;
+  font-size: 1.7rem;
   letter-spacing: 0.02em;
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.55), 0 0 12px rgba(0, 0, 0, 0.4);
   animation: sobe 980ms ease forwards;
@@ -516,9 +708,14 @@ button:focus-visible {
   color: #ffd1c8;
 }
 
+.numero-flutuante--magia {
+  color: #f0c8ff;
+  font-size: 1.8rem;
+}
+
 .numero-flutuante--critico {
   color: #ffe08a;
-  font-size: 1.45rem;
+  font-size: 1.85rem;
 }
 
 .numero-flutuante--guarda {
@@ -531,7 +728,7 @@ button:focus-visible {
 
 .relato {
   margin: 0;
-  min-height: 2.6em;
+  min-height: 2.8em;
   padding: 10px 12px;
   border-radius: 14px;
   background: rgba(10, 12, 20, 0.55);
@@ -620,6 +817,138 @@ button:focus-visible {
 .acao__detalhe {
   font-size: 0.72rem;
   color: var(--areia-suave);
+}
+
+.tela--descanso {
+  align-items: stretch;
+  text-align: center;
+  gap: 14px;
+  max-width: 720px;
+}
+
+.descanso-selo {
+  margin: 0;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--ouro);
+  font-weight: 800;
+}
+
+.descanso-titulo {
+  margin: 0;
+  font-size: clamp(1.6rem, 6vw, 2.4rem);
+}
+
+.descanso-texto {
+  margin: 0 auto;
+  max-width: 36rem;
+  color: var(--areia-suave);
+}
+
+.descanso-status {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  text-align: left;
+}
+
+.descanso-status .placa {
+  margin: 0;
+}
+
+.proximo-rival {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 12px;
+  align-items: center;
+  text-align: left;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid var(--linha);
+  background: var(--vidro);
+}
+
+.proximo-rival.is-chefe {
+  border-color: rgba(232, 195, 106, 0.45);
+  box-shadow: 0 0 18px rgba(232, 195, 106, 0.12);
+}
+
+.proximo-rival__silhueta {
+  width: 72px;
+  height: 88px;
+}
+
+.proximo-rival__silhueta .lutador__svg {
+  animation: none;
+  height: 88px;
+  width: auto;
+  margin: 0 auto;
+}
+
+.proximo-rival__rotulo {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ouro);
+}
+
+.proximo-rival__nome {
+  margin: 4px 0 2px;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.proximo-rival__nota {
+  margin: 0;
+  color: var(--areia-suave);
+  font-size: 0.92rem;
+}
+
+.descanso-escolha-rotulo {
+  margin: 6px 0 0;
+}
+
+.melhorias {
+  display: grid;
+  gap: 10px;
+}
+
+.melhoria {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  min-height: 84px;
+  padding: 14px 16px;
+  border: 1px solid var(--linha);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(36, 40, 62, 0.95), rgba(18, 20, 32, 0.95));
+  gap: 4px;
+}
+
+.melhoria__nome {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.melhoria__desc {
+  color: var(--areia-suave);
+  font-size: 0.92rem;
+}
+
+.melhoria:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.melhoria.is-escolhida {
+  border-color: var(--ciano);
+  box-shadow: 0 0 0 2px rgba(58, 214, 196, 0.35);
+}
+
+.melhoria:disabled {
+  opacity: 0.55;
 }
 
 .modal {
@@ -714,8 +1043,9 @@ button:focus-visible {
 
 @keyframes hit {
   0%, 100% { transform: translateX(0); filter: none; }
-  25% { transform: translateX(-6px); filter: saturate(1.4) brightness(1.3); }
-  50% { transform: translateX(6px); }
+  20% { transform: translateX(-8px); filter: saturate(1.6) brightness(1.55); }
+  45% { transform: translateX(8px); filter: saturate(1.3) brightness(1.25); }
+  70% { transform: translateX(-4px); }
 }
 
 @keyframes cair {
@@ -724,7 +1054,7 @@ button:focus-visible {
 
 @keyframes sobe {
   0% { opacity: 1; transform: translate(-50%, 8px); }
-  100% { opacity: 0; transform: translate(-50%, -46px); }
+  100% { opacity: 0; transform: translate(-50%, -52px); }
 }
 
 @keyframes poeira {
@@ -736,6 +1066,24 @@ button:focus-visible {
 @keyframes pulsa {
   0%, 100% { opacity: 0.7; }
   50% { opacity: 1; }
+}
+
+@keyframes treme {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes flash-arena {
+  0% { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+
+@keyframes flash-hit {
+  0% { opacity: 0.85; }
+  100% { opacity: 0; }
 }
 
 @media (max-width: 720px) {
@@ -755,11 +1103,42 @@ button:focus-visible {
   .acao__nome { font-size: 0.86rem; }
 }
 
+/* ~390px: Som no canto não pode cobrir a placa do rival. */
+@media (max-width: 430px) {
+  .tela--luta,
+  .tela--descanso {
+    padding-top: calc(62px + var(--safe-t));
+    padding-left: calc(12px + var(--safe-l));
+    padding-right: calc(12px + var(--safe-r));
+  }
+
+  .btn-som {
+    top: calc(8px + var(--safe-t));
+    right: calc(8px + var(--safe-r));
+    padding: 8px 10px;
+    min-height: 44px;
+  }
+
+  .placa {
+    padding: 8px;
+  }
+
+  .placa__nome {
+    font-size: 0.88rem;
+  }
+
+  .melhoria {
+    min-height: 88px;
+  }
+}
+
 @media (min-width: 860px) {
   .arena { min-height: 320px; }
   .lutador { width: 180px; }
+  .lutador--inimigo.is-chefe { width: 210px; }
   .acoes { gap: 14px; }
   .acao { min-height: 88px; }
+  .melhorias { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -774,7 +1153,8 @@ button:focus-visible {
 
 @media (hover: hover) and (pointer: fine) {
   .btn--principal:hover,
-  .acao:hover:not(:disabled) {
+  .acao:hover:not(:disabled),
+  .melhoria:hover:not(:disabled) {
     filter: brightness(1.08);
   }
 }

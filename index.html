@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<!-- Duelo Rápido: duelo de turnos estático, PT-BR. -->
+<!-- Duelo Rápido: campanha de 10 círculos, duelo de turnos estático, PT-BR. -->
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Duelo Rápido: luta de turnos original. Escolha atacar, defender ou magia e vença em poucos rounds.">
+  <meta name="description" content="Duelo Rápido: campanha de 10 círculos. Atacar, defender ou magia, escolher reforços e vencer chefes originais.">
   <meta name="theme-color" content="#0a0c14">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Duelo Rápido">
   <meta name="mobile-web-app-capable" content="yes">
   <title>Duelo Rápido</title>
-  <link rel="icon" href="favicon.svg?v=1.0.1" type="image/svg+xml">
-  <link rel="manifest" href="manifest.webmanifest?v=1.0.1">
-  <link rel="stylesheet" href="css/estilo.css?v=1.0.1">
+  <link rel="icon" href="favicon.svg?v=1.1.0" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest?v=1.1.0">
+  <link rel="stylesheet" href="css/estilo.css?v=1.1.0">
 </head>
 <body>
   <noscript>
@@ -27,23 +27,34 @@
 
     <section id="tela-titulo" class="tela tela--titulo is-ativa" aria-label="Tela inicial">
       <div class="titulo-marca">
-        <p class="titulo-marca__selo">Arena livre</p>
+        <p class="titulo-marca__selo">Campanha · 10 círculos</p>
         <h1 class="titulo-marca__nome">Duelo Rápido</h1>
-        <p class="titulo-marca__lema">Um turno. Uma escolha. Sem trégua.</p>
+        <p class="titulo-marca__lema">Um turno. Uma escolha. Dez rivais.</p>
       </div>
       <div class="titulo-art" aria-hidden="true">
         <div class="titulo-art__anel"></div>
         <div class="titulo-art__nara"></div>
-        <div class="titulo-art__dagro"></div>
+        <div class="titulo-art__rival"></div>
+        <ol class="titulo-art__pips">
+          <li></li><li></li><li></li><li></li><li class="is-chefe"></li>
+          <li></li><li></li><li></li><li class="is-chefe"></li><li class="is-chefe"></li>
+        </ol>
       </div>
-      <p class="titulo-intro">Enfrente um rival no ritmo curto: <strong>Atacar</strong>, <strong>Defender</strong> ou <strong>Magia</strong>.</p>
+      <p class="titulo-intro">Você é <strong>Nara</strong>. Cruze dez círculos, descanse entre as lutas e escolha reforços. No fim espera um chefe.</p>
       <div class="titulo-acoes">
-        <button type="button" id="btn-comecar" class="btn btn--principal">Começar duelo</button>
+        <button type="button" id="btn-continuar" class="btn btn--principal" hidden>Continuar campanha</button>
+        <button type="button" id="btn-comecar" class="btn btn--principal">Começar campanha</button>
+        <button type="button" id="btn-nova" class="btn btn--fantasma" hidden>Nova campanha</button>
       </div>
       <p class="titulo-dica">Toque grande, funciona no celular. Atalhos: 1 Atacar · 2 Defender · 3 Magia</p>
     </section>
 
     <section id="tela-luta" class="tela tela--luta" aria-label="Campo de duelo" hidden>
+      <div class="campanha-barra">
+        <p class="campanha-barra__txt" id="txt-circulo">Círculo 1/10</p>
+        <ol class="pips" id="pips" aria-hidden="true"></ol>
+      </div>
+
       <header class="hud">
         <div class="placa placa--aliado" id="placa-jogador">
           <div class="placa__topo">
@@ -71,18 +82,18 @@
 
         <div class="placa placa--inimigo" id="placa-inimigo">
           <div class="placa__topo">
-            <h2 class="placa__nome" id="nome-inimigo">Dagro</h2>
-            <span class="placa__papel">Rival</span>
+            <h2 class="placa__nome" id="nome-inimigo">Liro</h2>
+            <span class="placa__papel" id="papel-inimigo">Rival</span>
           </div>
           <div class="barra" data-tipo="vida">
-            <div class="barra__rotulo"><span>Vida</span><span id="vida-inimigo-txt">95</span></div>
-            <div class="barra__trilha" role="meter" aria-label="Vida do rival" aria-valuemin="0" aria-valuemax="95" aria-valuenow="95" id="vida-inimigo-meter">
+            <div class="barra__rotulo"><span>Vida</span><span id="vida-inimigo-txt">72</span></div>
+            <div class="barra__trilha" role="meter" aria-label="Vida do rival" aria-valuemin="0" aria-valuemax="72" aria-valuenow="72" id="vida-inimigo-meter">
               <div class="barra__preenchimento barra__preenchimento--vida" id="vida-inimigo-bar"></div>
             </div>
           </div>
           <div class="barra" data-tipo="essencia">
-            <div class="barra__rotulo"><span>Essência</span><span id="essencia-inimigo-txt">32</span></div>
-            <div class="barra__trilha" role="meter" aria-label="Essência do rival" aria-valuemin="0" aria-valuemax="32" aria-valuenow="32" id="essencia-inimigo-meter">
+            <div class="barra__rotulo"><span>Essência</span><span id="essencia-inimigo-txt">24</span></div>
+            <div class="barra__trilha" role="meter" aria-label="Essência do rival" aria-valuemin="0" aria-valuemax="24" aria-valuenow="24" id="essencia-inimigo-meter">
               <div class="barra__preenchimento barra__preenchimento--essencia" id="essencia-inimigo-bar"></div>
             </div>
           </div>
@@ -93,10 +104,12 @@
         <div class="arena__ceu"></div>
         <div class="arena__poeira" aria-hidden="true"></div>
         <div class="arena__chao"></div>
+        <div class="arena__flash" id="arena-flash" aria-hidden="true"></div>
 
         <div class="lutador lutador--nara" id="lutador-jogador" data-lado="aliado">
           <div class="lutador__sombra"></div>
           <div class="lutador__guarda" aria-hidden="true"></div>
+          <div class="lutador__flash" aria-hidden="true"></div>
           <svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true">
             <defs>
               <linearGradient id="nara-capa" x1="0" y1="0" x2="1" y2="1">
@@ -124,52 +137,12 @@
           <div class="flutuantes" id="flutuantes-jogador"></div>
         </div>
 
-        <div class="lutador lutador--dagro is-visivel" id="lutador-dagro" data-lado="inimigo">
+        <div class="lutador lutador--inimigo" id="lutador-inimigo" data-lado="inimigo">
           <div class="lutador__sombra"></div>
           <div class="lutador__guarda" aria-hidden="true"></div>
-          <svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true">
-            <defs>
-              <linearGradient id="dagro-corpo" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#ffb089"/>
-                <stop offset="1" stop-color="#7a2b16"/>
-              </linearGradient>
-            </defs>
-            <path d="M28 70 L92 70 L100 122 L20 122 Z" fill="url(#dagro-corpo)"/>
-            <rect x="34" y="122" width="16" height="24" rx="3" fill="#3b1b14"/>
-            <rect x="70" y="122" width="16" height="24" rx="3" fill="#3b1b14"/>
-            <path d="M36 70 L18 96 L30 102 L46 78 Z" fill="#c45a32"/>
-            <path d="M84 70 L110 88 L100 98 L76 80 Z" fill="#e27a42"/>
-            <ellipse cx="60" cy="42" rx="20" ry="18" fill="#2a1612"/>
-            <path d="M42 36 L50 18 L58 36 Z" fill="#ff8a3d"/>
-            <path d="M62 36 L70 16 L78 36 Z" fill="#ff8a3d"/>
-            <rect x="48" y="38" width="24" height="10" rx="3" fill="#1a0d0a"/>
-            <circle cx="54" cy="43" r="2.2" fill="#ffd36a"/>
-            <circle cx="66" cy="43" r="2.2" fill="#ffd36a"/>
-            <path d="M40 92 L80 92" stroke="#ffb16a" stroke-width="3" opacity="0.6"/>
-          </svg>
-          <div class="flutuantes" id="flutuantes-dagro"></div>
-        </div>
-
-        <div class="lutador lutador--velin" id="lutador-velin" data-lado="inimigo" hidden>
-          <div class="lutador__sombra"></div>
-          <div class="lutador__guarda" aria-hidden="true"></div>
-          <svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true">
-            <defs>
-              <linearGradient id="velin-manto" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#d7c4ff"/>
-                <stop offset="1" stop-color="#3b1f6e"/>
-              </linearGradient>
-            </defs>
-            <path class="velin-manto" d="M60 28 C18 48 16 130 36 150 C50 120 54 90 60 70 C66 90 70 120 84 150 C104 130 102 48 60 28 Z" fill="url(#velin-manto)"/>
-            <path d="M44 40 C48 18 72 18 76 42 C66 36 54 36 44 40 Z" fill="#1b1030"/>
-            <ellipse cx="60" cy="48" rx="12" ry="13" fill="#e8dffc"/>
-            <path d="M48 44 L72 44 L68 58 L52 58 Z" fill="#2a1848"/>
-            <circle cx="56" cy="50" r="1.8" fill="#c084fc"/>
-            <circle cx="64" cy="50" r="1.8" fill="#c084fc"/>
-            <circle class="velin-orbe" cx="24" cy="88" r="6" fill="#f0abfc"/>
-            <circle class="velin-orbe" cx="96" cy="96" r="5" fill="#a78bfa"/>
-          </svg>
-          <div class="flutuantes" id="flutuantes-velin"></div>
+          <div class="lutador__flash" aria-hidden="true"></div>
+          <div class="lutador__corpo" id="corpo-inimigo"></div>
+          <div class="flutuantes" id="flutuantes-inimigo"></div>
         </div>
       </div>
 
@@ -184,7 +157,7 @@
         <button type="button" class="acao" data-acao="defender" id="btn-defender" aria-label="Defender">
           <span class="acao__icone" aria-hidden="true"></span>
           <span class="acao__nome">Defender</span>
-          <span class="acao__detalhe">Guarda + essência</span>
+          <span class="acao__detalhe" id="detalhe-defender">Guarda + essência</span>
         </button>
         <button type="button" class="acao" data-acao="magia" id="btn-magia" aria-label="Magia">
           <span class="acao__icone" aria-hidden="true"></span>
@@ -194,16 +167,36 @@
       </div>
     </section>
 
+    <section id="tela-descanso" class="tela tela--descanso" aria-label="Descanso entre círculos" hidden>
+      <p class="descanso-selo" id="descanso-selo">Círculo 1/10 concluído</p>
+      <h2 class="descanso-titulo">Respiro no círculo</h2>
+      <p class="descanso-texto" id="descanso-texto">Nara recupera o fôlego. Escolha um reforço antes do próximo duelo.</p>
+
+      <div class="descanso-status" id="descanso-status"></div>
+
+      <div class="proximo-rival" id="proximo-rival">
+        <div class="proximo-rival__silhueta" id="proximo-silhueta" aria-hidden="true"></div>
+        <div>
+          <p class="proximo-rival__rotulo" id="proximo-rotulo">Próximo círculo</p>
+          <p class="proximo-rival__nome" id="proximo-nome">Dagro das Forjas</p>
+          <p class="proximo-rival__nota" id="proximo-nota">Bruto das forjas. Golpes pesados.</p>
+        </div>
+      </div>
+
+      <p class="descanso-escolha-rotulo">Escolha <strong>um</strong> reforço</p>
+      <div class="melhorias" id="melhorias" role="list"></div>
+    </section>
+
     <div id="modal-tutorial" class="modal" hidden>
       <div class="modal__caixa" role="dialog" aria-modal="true" aria-labelledby="tutorial-titulo">
         <h2 id="tutorial-titulo">Como duelar</h2>
-        <p>Cada turno, escolha <strong>exatamente uma</strong> ação:</p>
+        <p>São <strong>10 círculos</strong> em sequência. Em cada turno, escolha <strong>exatamente uma</strong> ação:</p>
         <ul class="tutorial-lista">
           <li><strong>Atacar</strong> — dano confiável, sem custo.</li>
           <li><strong>Defender</strong> — reduz o próximo golpe e recupera essência.</li>
           <li><strong>Magia</strong> — mais forte, mas gasta essência e perfura parte da guarda.</li>
         </ul>
-        <p>O duelo acaba quando a vida de alguém chega a zero. Ritmado e curto.</p>
+        <p>Entre as lutas você descansa e escolhe um reforço. Se cair, pode tentar o mesmo círculo de novo ou recomeçar a campanha.</p>
         <button type="button" id="btn-entendi" class="btn btn--principal">Entendi</button>
       </div>
     </div>
@@ -214,14 +207,14 @@
         <h2 id="fim-titulo">Vitória</h2>
         <p id="fim-texto">Nara venceu.</p>
         <div class="fim-acoes">
-          <button type="button" id="btn-revancha" class="btn btn--principal">Revancha</button>
-          <button type="button" id="btn-outro" class="btn btn--fantasma" hidden>Desafiar Velin</button>
+          <button type="button" id="btn-retry" class="btn btn--principal">Tentar de novo</button>
+          <button type="button" id="btn-reiniciar" class="btn btn--fantasma">Reiniciar campanha</button>
           <button type="button" id="btn-inicio" class="btn btn--texto">Voltar ao início</button>
         </div>
       </div>
     </div>
   </div>
 
-  <script src="js/jogo.js?v=1.0.1"></script>
+  <script src="js/jogo.js?v=1.1.0"></script>
 </body>
 </html>

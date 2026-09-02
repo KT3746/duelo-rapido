@@ -2,7 +2,7 @@
   "name": "Duelo Rápido",
   "short_name": "Duelo",
   "lang": "pt-BR",
-  "description": "Duelo de turnos original: atacar, defender ou lançar magia.",
+  "description": "Campanha de 10 círculos: atacar, defender ou lançar magia e vencer chefes originais.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0a0c14",
