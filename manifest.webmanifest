@@ -1,0 +1,18 @@
+{
+  "name": "Duelo Rápido",
+  "short_name": "Duelo",
+  "lang": "pt-BR",
+  "description": "Duelo de turnos original: atacar, defender ou lançar magia.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0c14",
+  "theme_color": "#0a0c14",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

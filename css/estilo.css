@@ -1,0 +1,780 @@
+/* Duelo Rápido — arena, HUD e ações em celular e desktop. */
+:root {
+  --fundo: #0a0c14;
+  --fundo-2: #14182a;
+  --areia: #f3ead8;
+  --areia-suave: #cfc4ad;
+  --ouro: #e8c36a;
+  --ciano: #3ad6c4;
+  --ciano-escuro: #0d3d3a;
+  --brasa: #ff6a3d;
+  --violeta: #b08cff;
+  --vida: #3ecf8e;
+  --vida-baixa: #e2556a;
+  --essencia: #6aa8ff;
+  --vidro: rgba(20, 22, 36, 0.72);
+  --linha: rgba(243, 234, 216, 0.14);
+  --sombra: 0 16px 40px rgba(0, 0, 0, 0.35);
+  --raio: 18px;
+  --fonte: "Segoe UI", "Trebuchet MS", "Avenir Next", "Nunito", system-ui, sans-serif;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--fundo);
+  color: var(--areia);
+  font-family: var(--fonte);
+}
+
+body {
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+button:focus-visible {
+  outline: 3px solid var(--ouro);
+  outline-offset: 3px;
+}
+
+.app {
+  min-height: 100dvh;
+  min-height: 100svh;
+  position: relative;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(58, 214, 196, 0.16), transparent 50%),
+    radial-gradient(900px 480px at 110% 0%, rgba(255, 106, 61, 0.16), transparent 46%),
+    linear-gradient(180deg, #0b0e1a 0%, #15101c 55%, #0a0c14 100%);
+}
+
+.tela {
+  display: none;
+  min-height: 100dvh;
+  padding:
+    calc(16px + var(--safe-t))
+    calc(16px + var(--safe-r))
+    calc(16px + var(--safe-b))
+    calc(16px + var(--safe-l));
+}
+
+.tela.is-ativa {
+  display: flex;
+  flex-direction: column;
+}
+
+.tela--titulo {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 18px;
+}
+
+.titulo-marca__selo {
+  margin: 0 0 8px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--ouro);
+}
+
+.titulo-marca__nome {
+  margin: 0;
+  font-size: clamp(2.4rem, 10vw, 4.6rem);
+  line-height: 0.92;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #fff8e4 0%, #e8c36a 70%, #c9842a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 3px 0 #5a2e10);
+}
+
+.titulo-marca__lema,
+.titulo-intro,
+.titulo-dica {
+  margin: 0;
+  max-width: 34rem;
+  color: var(--areia-suave);
+}
+
+.titulo-intro strong {
+  color: var(--areia);
+}
+
+.titulo-art {
+  position: relative;
+  width: min(360px, 86vw);
+  height: 150px;
+  margin: 8px 0 4px;
+}
+
+.titulo-art__anel {
+  position: absolute;
+  inset: 40px 12%;
+  border: 2px solid rgba(232, 195, 106, 0.35);
+  border-radius: 50%;
+  box-shadow: 0 0 40px rgba(58, 214, 196, 0.15);
+}
+
+.titulo-art__nara,
+.titulo-art__dagro {
+  position: absolute;
+  bottom: 18px;
+  width: 54px;
+  height: 92px;
+  border-radius: 18px 18px 8px 8px;
+}
+
+.titulo-art__nara {
+  left: 18%;
+  background: linear-gradient(180deg, #d9fff8, #1a7a72);
+  box-shadow: 0 0 18px rgba(58, 214, 196, 0.45);
+  animation: flutuatitulo 2.8s ease-in-out infinite;
+}
+
+.titulo-art__dagro {
+  right: 18%;
+  width: 66px;
+  background: linear-gradient(180deg, #ffb089, #7a2b16);
+  box-shadow: 0 0 18px rgba(255, 106, 61, 0.4);
+  animation: flutuatitulo 2.8s ease-in-out infinite 0.4s;
+}
+
+.titulo-acoes {
+  width: min(420px, 100%);
+}
+
+.titulo-dica {
+  font-size: 0.82rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 56px;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 16px;
+  background: #2a2418;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.btn--principal {
+  background: linear-gradient(180deg, #f0d48a, #c9892c);
+  color: #2a1708;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.btn--fantasma {
+  background: transparent;
+  border: 2px solid rgba(243, 234, 216, 0.28);
+}
+
+.btn--texto {
+  background: transparent;
+  min-height: 44px;
+  color: var(--areia-suave);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-som {
+  position: fixed;
+  top: calc(10px + var(--safe-t));
+  right: calc(10px + var(--safe-r));
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--linha);
+  border-radius: 999px;
+  background: var(--vidro);
+  backdrop-filter: blur(10px);
+}
+
+.btn-som__icone {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--ciano);
+  box-shadow: 6px 0 0 var(--ciano);
+}
+
+.btn-som.is-mudo .btn-som__icone {
+  background: #8a8172;
+  box-shadow: 6px 0 0 #8a8172;
+}
+
+.tela--luta {
+  gap: 10px;
+  max-width: 1100px;
+  margin: 0 auto;
+  overflow-y: auto;
+}
+
+.hud {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 8px;
+  align-items: start;
+}
+
+.placa {
+  background: var(--vidro);
+  border: 1px solid var(--linha);
+  border-radius: var(--raio);
+  padding: 10px;
+  backdrop-filter: blur(12px);
+}
+
+.placa__topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.placa__nome {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.placa__papel {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--areia-suave);
+}
+
+.placa--aliado {
+  box-shadow: inset 3px 0 0 var(--ciano);
+}
+
+.placa--inimigo {
+  box-shadow: inset -3px 0 0 var(--brasa);
+}
+
+.barra + .barra {
+  margin-top: 7px;
+}
+
+.barra__rotulo {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  margin-bottom: 4px;
+  color: var(--areia-suave);
+}
+
+.barra__trilha {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.barra__preenchimento {
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  transition: transform 0.35s ease;
+}
+
+.barra__preenchimento--vida {
+  background: linear-gradient(90deg, #2fae74, var(--vida));
+}
+
+.barra.is-baixa .barra__preenchimento--vida {
+  background: linear-gradient(90deg, #a61f38, var(--vida-baixa));
+}
+
+.barra__preenchimento--essencia {
+  background: linear-gradient(90deg, #3b6fdb, var(--essencia));
+}
+
+.centro-turno {
+  align-self: center;
+  text-align: center;
+  min-width: 88px;
+}
+
+.centro-turno__rodada,
+.centro-turno__vez {
+  margin: 0;
+}
+
+.centro-turno__rodada {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ouro);
+}
+
+.centro-turno__vez {
+  font-weight: 800;
+}
+
+.arena {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 220px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--linha);
+  background:
+    radial-gradient(ellipse at 50% 120%, rgba(232, 195, 106, 0.16), transparent 42%),
+    linear-gradient(180deg, #1c1630 0%, #241820 48%, #141018 100%);
+}
+
+.arena__ceu {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(58, 214, 196, 0.18), transparent 28%),
+    radial-gradient(circle at 80% 18%, rgba(255, 106, 61, 0.16), transparent 26%);
+}
+
+.arena__poeira,
+.arena__poeira::before,
+.arena__poeira::after {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(243, 234, 216, 0.35);
+  animation: poeira 5s linear infinite;
+}
+
+.arena__poeira {
+  left: 20%;
+  top: 30%;
+}
+
+.arena__poeira::before {
+  content: "";
+  left: 140px;
+  top: 40px;
+  animation-delay: -1.4s;
+}
+
+.arena__poeira::after {
+  content: "";
+  left: 70px;
+  top: -20px;
+  width: 5px;
+  height: 5px;
+  animation-delay: -2.6s;
+}
+
+.arena__chao {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 10%;
+  height: 28%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(232, 195, 106, 0.28), rgba(20, 16, 18, 0.1) 70%);
+  box-shadow: 0 0 0 2px rgba(232, 195, 106, 0.12);
+}
+
+.lutador {
+  position: absolute;
+  bottom: 8%;
+  width: min(150px, 38vw);
+  z-index: 2;
+  transform-origin: center bottom;
+}
+
+.lutador--nara {
+  left: 6%;
+  --dir: 1;
+}
+
+.lutador--dagro,
+.lutador--velin {
+  right: 6%;
+  --dir: -1;
+}
+
+.lutador__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.45));
+  animation: idle 2.4s ease-in-out infinite;
+}
+
+.lutador__sombra {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 4px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+  filter: blur(3px);
+}
+
+.lutador__guarda {
+  position: absolute;
+  inset: 8% 4% 10%;
+  border: 3px solid rgba(106, 168, 255, 0.0);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.lutador.is-guarda .lutador__guarda {
+  opacity: 1;
+  border-color: rgba(106, 168, 255, 0.85);
+  box-shadow: 0 0 18px rgba(106, 168, 255, 0.45);
+}
+
+.lutador--nara.is-guarda .lutador__guarda {
+  border-color: rgba(58, 214, 196, 0.9);
+  box-shadow: 0 0 18px rgba(58, 214, 196, 0.45);
+}
+
+.lutador.is-ataque .lutador__svg {
+  animation: ataque 0.42s ease;
+}
+
+.lutador.is-magia .lutador__svg {
+  animation: magia 0.55s ease;
+  filter: drop-shadow(0 0 16px rgba(255, 224, 138, 0.8));
+}
+
+.lutador.is-hit .lutador__svg {
+  animation: hit 0.4s ease;
+}
+
+.lutador.is-cair .lutador__svg {
+  animation: cair 0.7s ease forwards;
+}
+
+.nara-orbe,
+.velin-orbe {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulsa 1.6s ease-in-out infinite;
+}
+
+.flutuantes {
+  position: absolute;
+  left: 50%;
+  top: 18%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.numero-flutuante {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  transform: translate(-50%, 0);
+  font-weight: 800;
+  font-size: 1.55rem;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.55), 0 0 12px rgba(0, 0, 0, 0.4);
+  animation: sobe 980ms ease forwards;
+  white-space: nowrap;
+}
+
+.numero-flutuante--dano {
+  color: #ffd1c8;
+}
+
+.numero-flutuante--critico {
+  color: #ffe08a;
+  font-size: 1.45rem;
+}
+
+.numero-flutuante--guarda {
+  color: #9ecbff;
+}
+
+.numero-flutuante--cura {
+  color: #7dffc4;
+}
+
+.relato {
+  margin: 0;
+  min-height: 2.6em;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(10, 12, 20, 0.55);
+  border: 1px solid var(--linha);
+  text-align: center;
+}
+
+.acoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  padding-bottom: 4px;
+}
+
+.acao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 76px;
+  padding: 10px 8px;
+  border: 1px solid var(--linha);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(36, 40, 62, 0.95), rgba(18, 20, 32, 0.95));
+}
+
+.acao:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+}
+
+.acao:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.acao[data-acao="atacar"] {
+  box-shadow: inset 0 -3px 0 #c9842a;
+}
+
+.acao[data-acao="defender"] {
+  box-shadow: inset 0 -3px 0 #3b6fdb;
+}
+
+.acao[data-acao="magia"] {
+  box-shadow: inset 0 -3px 0 #a855f7;
+}
+
+.acao__icone {
+  width: 22px;
+  height: 22px;
+  display: block;
+  background: currentColor;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+}
+
+.acao[data-acao="atacar"] .acao__icone {
+  color: #f0d48a;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M3 21 L8 16 L10 18 L5 23 Z M13 3 L21 11 L19 13 L16 10 L10 16 L8 14 L14 8 L11 5 Z'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M3 21 L8 16 L10 18 L5 23 Z M13 3 L21 11 L19 13 L16 10 L10 16 L8 14 L14 8 L11 5 Z'/%3E%3C/svg%3E");
+}
+
+.acao[data-acao="defender"] .acao__icone {
+  color: #9ecbff;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M12 2 L20 6 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V6 Z'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M12 2 L20 6 V12 C20 17 16 20.5 12 22 C8 20.5 4 17 4 12 V6 Z'/%3E%3C/svg%3E");
+}
+
+.acao[data-acao="magia"] .acao__icone {
+  color: #e9b3ff;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M12 2 L14 9 L21 12 L14 15 L12 22 L10 15 L3 12 L10 9 Z'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M12 2 L14 9 L21 12 L14 15 L12 22 L10 15 L3 12 L10 9 Z'/%3E%3C/svg%3E");
+}
+
+.acao__nome {
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.acao__detalhe {
+  font-size: 0.72rem;
+  color: var(--areia-suave);
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: calc(16px + var(--safe-t)) 16px calc(16px + var(--safe-b));
+  background: rgba(6, 8, 14, 0.62);
+  backdrop-filter: blur(8px);
+}
+
+.modal[hidden],
+.tela[hidden],
+.lutador[hidden],
+.btn[hidden] {
+  display: none !important;
+}
+
+.modal__caixa {
+  width: min(440px, 100%);
+  padding: 22px 20px;
+  border-radius: 22px;
+  background: #171821;
+  border: 1px solid var(--linha);
+  box-shadow: var(--sombra);
+}
+
+.modal__caixa h2,
+.modal__caixa p,
+.tutorial-lista {
+  margin-top: 0;
+}
+
+.tutorial-lista {
+  padding-left: 1.1rem;
+  color: var(--areia-suave);
+}
+
+.tutorial-lista li + li {
+  margin-top: 8px;
+}
+
+.fim-selo {
+  margin: 0 0 6px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--ouro);
+}
+
+.modal__caixa--fim h2 {
+  margin: 0 0 8px;
+  font-size: 2rem;
+}
+
+.fim-acoes {
+  display: grid;
+  gap: 8px;
+}
+
+.app.is-vitoria .modal__caixa--fim h2 {
+  color: var(--ciano);
+}
+
+.app.is-derrota .modal__caixa--fim h2 {
+  color: #ff8b8b;
+}
+
+@keyframes idle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes flutuatitulo {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes ataque {
+  0% { transform: translate(0, 0); }
+  35% { transform: translate(calc(var(--dir) * 36px), -10px) rotate(calc(var(--dir) * 4deg)); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes magia {
+  0% { transform: scale(1) rotate(0deg); }
+  40% { transform: scale(1.08) rotate(calc(var(--dir) * -6deg)); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes hit {
+  0%, 100% { transform: translateX(0); filter: none; }
+  25% { transform: translateX(-6px); filter: saturate(1.4) brightness(1.3); }
+  50% { transform: translateX(6px); }
+}
+
+@keyframes cair {
+  to { transform: translateY(18px) rotate(calc(var(--dir) * 12deg)); opacity: 0.35; }
+}
+
+@keyframes sobe {
+  0% { opacity: 1; transform: translate(-50%, 8px); }
+  100% { opacity: 0; transform: translate(-50%, -46px); }
+}
+
+@keyframes poeira {
+  0% { transform: translateY(0); opacity: 0.15; }
+  50% { opacity: 0.55; }
+  100% { transform: translateY(-70px); opacity: 0; }
+}
+
+@keyframes pulsa {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+@media (max-width: 720px) {
+  .hud {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "aliado inimigo"
+      "turno turno";
+  }
+
+  .placa--aliado { grid-area: aliado; }
+  .placa--inimigo { grid-area: inimigo; }
+  .centro-turno { grid-area: turno; }
+
+  .placa__nome { font-size: 0.95rem; }
+  .acao { min-height: 72px; }
+  .acao__nome { font-size: 0.86rem; }
+}
+
+@media (min-width: 860px) {
+  .arena { min-height: 320px; }
+  .lutador { width: 180px; }
+  .acoes { gap: 14px; }
+  .acao { min-height: 88px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn--principal:hover,
+  .acao:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+}
