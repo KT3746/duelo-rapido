@@ -31,6 +31,8 @@ jobs:
           cp js/jogo.js _site/js/
       - name: Configurar Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: Enviar artefato
         uses: actions/upload-pages-artifact@v3
         with:
