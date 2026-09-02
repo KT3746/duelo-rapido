@@ -227,8 +227,9 @@ button:focus-visible {
   color: var(--areia-suave);
 }
 
-.btn:active {
-  transform: scale(0.98);
+.btn:disabled {
+  opacity: 0.55;
+  cursor: wait;
 }
 
 .btn-som {
@@ -823,7 +824,7 @@ button:focus-visible {
 .tela--descanso {
   align-items: stretch;
   text-align: center;
-  gap: 14px;
+  gap: 10px;
   max-width: 720px;
 }
 
@@ -831,14 +832,14 @@ button:focus-visible {
   margin: 0;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--ouro);
   font-weight: 800;
 }
 
 .descanso-titulo {
   margin: 0;
-  font-size: clamp(1.6rem, 6vw, 2.4rem);
+  font-size: clamp(1.25rem, 4.5vw, 2.2rem);
 }
 
 .descanso-texto {
@@ -848,24 +849,45 @@ button:focus-visible {
 }
 
 .descanso-status {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
   text-align: left;
 }
 
-.descanso-status .placa {
-  margin: 0;
+.descanso-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1 1 calc(50% - 6px);
+  padding: 6px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--linha);
+  background: var(--vidro);
+}
+
+.descanso-chip__k {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--areia-suave);
+}
+
+.descanso-chip__v {
+  font-size: 0.88rem;
+  font-weight: 800;
 }
 
 .proximo-rival {
   display: grid;
-  grid-template-columns: 72px 1fr;
-  gap: 12px;
+  grid-template-columns: 56px 1fr;
+  gap: 10px;
   align-items: center;
   text-align: left;
-  padding: 12px;
-  border-radius: 18px;
+  padding: 8px 10px;
+  border-radius: 14px;
   border: 1px solid var(--linha);
   background: var(--vidro);
 }
@@ -876,44 +898,45 @@ button:focus-visible {
 }
 
 .proximo-rival__silhueta {
-  width: 72px;
-  height: 88px;
+  width: 56px;
+  height: 64px;
 }
 
 .proximo-rival__silhueta .lutador__svg {
   animation: none;
-  height: 88px;
+  height: 64px;
   width: auto;
   margin: 0 auto;
 }
 
 .proximo-rival__rotulo {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ouro);
 }
 
 .proximo-rival__nome {
-  margin: 4px 0 2px;
-  font-size: 1.15rem;
+  margin: 2px 0 0;
+  font-size: 1.05rem;
   font-weight: 800;
 }
 
 .proximo-rival__nota {
   margin: 0;
   color: var(--areia-suave);
-  font-size: 0.92rem;
+  font-size: 0.82rem;
 }
 
 .descanso-escolha-rotulo {
-  margin: 6px 0 0;
+  margin: 2px 0 0;
+  font-size: 0.92rem;
 }
 
 .melhorias {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .melhoria {
@@ -921,22 +944,22 @@ button:focus-visible {
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  min-height: 84px;
-  padding: 14px 16px;
+  min-height: 56px;
+  padding: 10px 12px;
   border: 1px solid var(--linha);
-  border-radius: 18px;
+  border-radius: 14px;
   background: linear-gradient(180deg, rgba(36, 40, 62, 0.95), rgba(18, 20, 32, 0.95));
-  gap: 4px;
+  gap: 2px;
 }
 
 .melhoria__nome {
   font-weight: 800;
-  font-size: 1.05rem;
+  font-size: 0.98rem;
 }
 
 .melhoria__desc {
   color: var(--areia-suave);
-  font-size: 0.92rem;
+  font-size: 0.8rem;
 }
 
 .melhoria:active:not(:disabled) {
@@ -1105,13 +1128,21 @@ button:focus-visible {
   .acao__nome { font-size: 0.86rem; }
 }
 
-/* ~390px: Som no canto não pode cobrir a placa do rival. */
+/* ~390px: Som no canto não pode cobrir a placa do rival. Respiro cabe na tela. */
 @media (max-width: 430px) {
-  .tela--luta,
-  .tela--descanso {
+  .tela--luta {
     padding-top: calc(62px + var(--safe-t));
     padding-left: calc(12px + var(--safe-l));
     padding-right: calc(12px + var(--safe-r));
+  }
+
+  .tela--descanso {
+    padding-top: calc(48px + var(--safe-t));
+    padding-bottom: calc(8px + var(--safe-b));
+    padding-left: calc(10px + var(--safe-l));
+    padding-right: calc(10px + var(--safe-r));
+    gap: 6px;
+    justify-content: flex-start;
   }
 
   .btn-som {
@@ -1129,8 +1160,92 @@ button:focus-visible {
     font-size: 0.88rem;
   }
 
+  .descanso-texto {
+    display: none;
+  }
+
+  .descanso-titulo {
+    font-size: 1.15rem;
+  }
+
+  .descanso-chip {
+    flex: 1 1 calc(50% - 6px);
+    padding: 4px 8px;
+  }
+
+  .proximo-rival {
+    grid-template-columns: 1fr;
+    padding: 6px 10px;
+  }
+
+  .proximo-rival__silhueta {
+    display: none;
+  }
+
+  .proximo-rival__nota {
+    display: none;
+  }
+
+  .melhorias {
+    gap: 6px;
+  }
+
   .melhoria {
-    min-height: 88px;
+    min-height: 48px;
+    padding: 8px 10px;
+    border-radius: 12px;
+  }
+
+  .melhoria__nome {
+    font-size: 0.9rem;
+  }
+
+  .melhoria__desc {
+    font-size: 0.74rem;
+  }
+}
+
+@media (max-height: 740px) {
+  .tela--descanso {
+    gap: 6px;
+    padding-top: calc(46px + var(--safe-t));
+  }
+
+  .descanso-texto {
+    display: none;
+  }
+
+  .proximo-rival__silhueta,
+  .proximo-rival__nota {
+    display: none;
+  }
+
+  .proximo-rival {
+    grid-template-columns: 1fr;
+    padding: 6px 10px;
+  }
+
+  .melhoria {
+    min-height: 48px;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-height: 560px) {
+  .descanso-status {
+    display: none;
+  }
+
+  .melhorias {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+  }
+
+  .melhoria {
+    min-height: 64px;
+    padding: 8px 6px;
+    align-items: center;
+    text-align: center;
   }
 }
 

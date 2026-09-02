@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const VERSAO = "1.1.0";
+  const VERSAO = "1.1.1";
   const CHAVE = "duelo-rapido";
   const TOTAL_CIRCULOS = 10;
 
@@ -1136,7 +1136,7 @@
   }
 
   function placaStatus(titulo, valor) {
-    return `<article class="placa"><div class="placa__topo"><h3 class="placa__nome">${titulo}</h3></div><p style="margin:0">${valor}</p></article>`;
+    return `<span class="descanso-chip"><span class="descanso-chip__k">${titulo}</span><span class="descanso-chip__v">${valor}</span></span>`;
   }
 
   function pintarDescanso() {
@@ -1292,17 +1292,21 @@
     }
   }
 
-  function abrirTutorialOu(cb) {
-    if (!estado.viuTutorial) {
-      estado.aposTutorial = cb;
-      els.modalTutorial.hidden = false;
+  function mostrarTutorial(depois) {
+    els.modalFim.hidden = true;
+    estado.aposTutorial = depois;
+    els.modalTutorial.hidden = false;
+    els.btnEntendi.disabled = true;
+    /* Evita o toque em Começar/Nova cair no Entendi (mesmo lugar da tela). */
+    window.setTimeout(() => {
+      if (els.modalTutorial.hidden) return;
+      els.btnEntendi.disabled = false;
       els.btnEntendi.focus();
-      return;
-    }
-    cb();
+    }, 420);
   }
 
   function fecharTutorial() {
+    if (els.btnEntendi.disabled) return;
     estado.viuTutorial = true;
     gravarFlag("tutorial", true);
     els.modalTutorial.hidden = true;
@@ -1319,15 +1323,15 @@
   function ligarEventos() {
     els.btnComecar.addEventListener("click", () => {
       garantirAudio();
-      abrirTutorialOu(novaCampanha);
+      mostrarTutorial(novaCampanha);
     });
     els.btnContinuar.addEventListener("click", () => {
       garantirAudio();
-      abrirTutorialOu(continuarCampanha);
+      continuarCampanha();
     });
     els.btnNova.addEventListener("click", () => {
       garantirAudio();
-      abrirTutorialOu(novaCampanha);
+      mostrarTutorial(novaCampanha);
     });
     els.btnEntendi.addEventListener("click", () => {
       garantirAudio();
@@ -1348,14 +1352,14 @@
     els.btnRetry.addEventListener("click", () => {
       garantirAudio();
       if (estado.fase === "concluida") {
-        novaCampanha();
+        mostrarTutorial(novaCampanha);
         return;
       }
       iniciarCirculo({ curarJogador: true });
     });
     els.btnReiniciar.addEventListener("click", () => {
       garantirAudio();
-      novaCampanha();
+      mostrarTutorial(novaCampanha);
     });
     els.btnInicio.addEventListener("click", () => {
       els.modalFim.hidden = true;
