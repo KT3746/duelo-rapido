@@ -432,6 +432,38 @@ button:focus-visible {
   font-weight: 800;
 }
 
+.tela-luta.is-vez-inimigo .centro-turno {
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: rgba(255, 106, 61, 0.14);
+  border: 1px solid rgba(255, 106, 61, 0.42);
+  box-shadow: 0 0 18px rgba(255, 106, 61, 0.28);
+}
+
+.tela-luta.is-vez-inimigo .centro-turno__vez {
+  color: #ffb088;
+  animation: pulso-vez-inimigo 1.15s ease-in-out infinite;
+}
+
+.tela-luta.is-vez-inimigo .acoes {
+  opacity: 0.48;
+  filter: saturate(0.65);
+  pointer-events: none;
+}
+
+@keyframes pulso-vez-inimigo {
+  0%,
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 8px rgba(255, 106, 61, 0.45);
+  }
+
+  50% {
+    transform: scale(1.05);
+    text-shadow: 0 0 16px rgba(255, 140, 90, 0.85);
+  }
+}
+
 .arena {
   position: relative;
   flex: 1 1 auto;

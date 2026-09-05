@@ -4,7 +4,7 @@ Jogo de luta em turnos, original, feito para o navegador. Você controla **Nara*
 
 Jogue online: [https://kt3746.github.io/duelo-rapido/](https://kt3746.github.io/duelo-rapido/)
 
-Versão **1.1.3** — campanha de 10 círculos. O tutorial aparece em toda **Nova campanha**.
+Versão **1.1.4** — campanha de 10 círculos. O tutorial aparece em toda **Nova campanha**.
 
 ## Como jogar
 

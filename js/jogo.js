@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const VERSAO = "1.1.3";
+  const VERSAO = "1.1.4";
   const CHAVE = "duelo-rapido";
   const TOTAL_CIRCULOS = 10;
 
@@ -828,6 +828,10 @@
     els.acoes.setAttribute("aria-disabled", ativos ? "false" : "true");
   }
 
+  function setVezInimigo(aguardando) {
+    els.telaLuta.classList.toggle("is-vez-inimigo", aguardando);
+  }
+
   function relatar(msg) {
     els.relato.textContent = msg;
   }
@@ -868,6 +872,7 @@
     mostrarTela("luta");
     pintarHud();
     els.txtVez.textContent = TEXTO.suaVez;
+    setVezInimigo(false);
     relatar(TEXTO.inicioRelato(rival.titulo, rival.nota));
     setBotoes(true);
     gravarCampanha();
@@ -1063,6 +1068,7 @@
 
   function mostrarFim(tipo) {
     estado.ocupado = true;
+    setVezInimigo(false);
     setBotoes(false);
     els.app.classList.toggle("is-vitoria", tipo !== "derrota");
     els.app.classList.toggle("is-derrota", tipo === "derrota");
@@ -1228,6 +1234,7 @@
     }
 
     els.txtVez.textContent = TEXTO.vezInimigo;
+    setVezInimigo(true);
     await esperar(380);
     const acaoIA = escolherAcaoIA();
     await resolverAcao("inimigo", acaoIA);
@@ -1244,6 +1251,7 @@
     }
     estado.rodada += 1;
     els.txtVez.textContent = TEXTO.suaVez;
+    setVezInimigo(false);
     pintarHud();
     relatar(`${recapJogador} ${recapInimigo}`);
     estado.ocupado = false;
