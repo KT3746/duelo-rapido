@@ -1,0 +1,25 @@
+---
+description: Proibir variantes Fast de modelos — Cursor, Cloud Agents e Grok Bot
+alwaysApply: true
+---
+
+# FAST SEMPRE DESLIGADO
+
+Política obrigatória do Thomas: em hipótese nenhuma usar modelos de IA com **Fast ligado**.
+
+## Proibido
+
+- Qualquer slug ou nome de modelo que contenha `-fast`, `Fast` ou termine em `-fast`.
+- Ativar o toggle **Fast** no seletor de modelos do Cursor.
+- Lançar subagentes (Task tool, Cloud Agents, Grok Bot) com variantes rápidas.
+- Sugerir, escolher ou aceitar fallback silencioso para variantes Fast.
+
+## Obrigatório
+
+- Preferir sempre a variante **sem Fast** do mesmo modelo (ex.: `cursor-grok-4.6-high`, nunca `cursor-grok-4.6-high-fast`).
+- Em subagentes definidos em `.cursor/agents/`, usar frontmatter `model: <modelo>[fast=false]`.
+- Se o usuário pedir um modelo indisponível sem Fast, informar e pedir alternativa — **não** ligar Fast.
+
+## Escopo
+
+Vale para: Agent no IDE, Cloud Agents, subagentes, automações e **Grok Bot** neste repositório.
