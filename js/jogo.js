@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const VERSAO = "1.2.1";
+  const VERSAO = "1.3.0";
   const CHAVE = "duelo-rapido";
   const TOTAL_CIRCULOS = 10;
 
@@ -12,12 +12,12 @@
     vezInimigo: "Vez do inimigo",
     turno: (n) => `Turno ${n}`,
     circulo: (n) => `Círculo ${n}/${TOTAL_CIRCULOS}`,
-    voceAtacou: (dano, nome) => `Você atacou e causou ${dano} de dano em ${nome}.`,
-    voceMagia: (dano, nome) => `Você lançou Clarão e causou ${dano} de dano em ${nome}.`,
-    voceDefendeu: (n) => `Você se defendeu e recuperou ${n} de essência.`,
-    inimigoAtacou: (nome, dano) => `${nome} atacou! Você perdeu ${dano} de vida.`,
-    inimigoMagia: (nome, magia, dano) => `${nome} lançou ${magia}! Você perdeu ${dano} de vida.`,
-    inimigoDefendeu: (nome, n) => `${nome} se defendeu e recuperou ${n} de essência.`,
+    voceAtacou: (dano, nome) => `Ataque: −${dano} em ${nome}.`,
+    voceMagia: (dano, nome) => `Clarão: −${dano} em ${nome}.`,
+    voceDefendeu: (n) => `Guarda. +${n} essência.`,
+    inimigoAtacou: (nome, dano) => `${nome}: −${dano} em você.`,
+    inimigoMagia: (nome, magia, dano) => `${nome} · ${magia}: −${dano} em você.`,
+    inimigoDefendeu: (nome, n) => `${nome} defendeu. +${n} essência.`,
     acertoPreciso: "Acerto preciso!",
     escudoAbsorveu: "O escudo absorveu parte do golpe.",
     essenciaCurta: "Essência insuficiente para magia.",
@@ -27,6 +27,7 @@
     campanhaVencida: "Campanha encerrada",
     venceuEm: (nome, rival, turnos) => `${nome} derrotou ${rival} em ${turnos} turnos.`,
     venceuCampanha: (rival, turnos) => `Nara fechou os dez círculos. ${rival} caiu no turno ${turnos}. O círculo inteiro é dela.`,
+    resumoCampanha: (s) => `Resumo: ${s.circulos} círculos · ${s.turnos} turnos · ${s.danoFeito} dano causado · ${s.danoTomado} dano sofrido.`,
     perdeuPara: (rival) => `${rival} venceu este círculo. Tente de novo ou recomece a campanha.`,
     fimSeloWin: "Círculo encerrado",
     fimSeloLose: "Você caiu",
@@ -367,6 +368,8 @@
   const MELHORIAS = [
     {
       id: "cura",
+      tipo: "cura",
+      selo: "Cura",
       nome: "Curar feridas",
       disponivel: (j) => j.vida < j.vidaMax,
       detalhe: (j) => {
@@ -379,6 +382,8 @@
     },
     {
       id: "vidaMax",
+      tipo: "poder",
+      selo: "Poder",
       nome: "Corpo firme",
       detalhe: (j) => `Vida máxima ${j.vidaMax} → ${j.vidaMax + 12}. Cura 12 agora.`,
       aplicar: (j) => {
@@ -388,6 +393,8 @@
     },
     {
       id: "essMax",
+      tipo: "magia",
+      selo: "Magia",
       nome: "Poço de essência",
       detalhe: (j) => `Essência máxima ${j.essenciaMax} → ${j.essenciaMax + 8}. Recarrega 16.`,
       aplicar: (j) => {
@@ -397,6 +404,8 @@
     },
     {
       id: "ataque",
+      tipo: "poder",
+      selo: "Poder",
       nome: "Gume afiado",
       detalhe: (j) => `Ataque ${j.ataque.min}–${j.ataque.max} → ${j.ataque.min + 2}–${j.ataque.max + 2}.`,
       aplicar: (j) => {
@@ -406,6 +415,8 @@
     },
     {
       id: "magiaDano",
+      tipo: "magia",
+      selo: "Magia",
       nome: "Clarão maior",
       detalhe: (j) => `Magia ${j.magia.min}–${j.magia.max} → ${j.magia.min + 4}–${j.magia.max + 4}.`,
       aplicar: (j) => {
@@ -415,6 +426,8 @@
     },
     {
       id: "magiaBarata",
+      tipo: "magia",
+      selo: "Magia",
       nome: "Foco sereno",
       disponivel: (j) => j.magia.custo > 10,
       detalhe: (j) => `Custo da magia ${j.magia.custo} → ${Math.max(10, j.magia.custo - 3)} essência.`,
@@ -424,6 +437,8 @@
     },
     {
       id: "critico",
+      tipo: "poder",
+      selo: "Poder",
       nome: "Olho certeiro",
       disponivel: (j) => j.critico < 0.36,
       detalhe: (j) => `Acerto preciso ${Math.round(j.critico * 100)}% → ${Math.round((j.critico + 0.08) * 100)}%.`,
@@ -433,6 +448,8 @@
     },
     {
       id: "guarda",
+      tipo: "defesa",
+      selo: "Defesa",
       nome: "Guarda de aço",
       disponivel: (j) => j.guardaReducao < 0.78,
       detalhe: () => "Defender reduz ainda mais o próximo golpe.",
@@ -442,6 +459,8 @@
     },
     {
       id: "folego",
+      tipo: "cura",
+      selo: "Cura",
       nome: "Segundo fôlego",
       disponivel: (j) => j.vida < j.vidaMax,
       detalhe: (j) => `Cura 30 de vida (${j.vida} → ${Math.min(j.vidaMax, j.vida + 30)}) e +12 essência.`,
@@ -452,6 +471,8 @@
     },
     {
       id: "essDefesa",
+      tipo: "defesa",
+      selo: "Defesa",
       nome: "Postura viva",
       disponivel: (j) => j.essenciaDefesa < 12,
       detalhe: (j) => `Defender recupera ${j.essenciaDefesa} → ${j.essenciaDefesa + 3} essência.`,
@@ -461,6 +482,8 @@
     },
     {
       id: "perfura",
+      tipo: "magia",
+      selo: "Magia",
       nome: "Clarão cortante",
       disponivel: (j) => j.magia.perfuracao < 0.74,
       detalhe: () => "Sua magia ignora mais a guarda do rival.",
@@ -494,6 +517,7 @@
     fimSelo: document.getElementById("fim-selo"),
     fimTitulo: document.getElementById("fim-titulo"),
     fimTexto: document.getElementById("fim-texto"),
+    fimResumo: document.getElementById("fim-resumo"),
     btnRetry: document.getElementById("btn-retry"),
     btnReiniciar: document.getElementById("btn-reiniciar"),
     btnInicio: document.getElementById("btn-inicio"),
@@ -545,7 +569,12 @@
     audio: null,
     tutorialTravado: false,
     ignorarTituloAte: 0,
+    stats: { turnos: 0, danoFeito: 0, danoTomado: 0, circulos: 0 },
   };
+
+  function resetStats() {
+    estado.stats = { turnos: 0, danoFeito: 0, danoTomado: 0, circulos: 0 };
+  }
 
   function lerFlag(nome, padrao) {
     try {
@@ -860,11 +889,13 @@
     return esperar(ms).then(() => el.classList.remove(classe));
   }
 
-  function tremerArena() {
-    els.arena.classList.remove("is-treme", "is-flash");
+  function tremerArena(forte) {
+    els.arena.classList.remove("is-treme", "is-flash", "is-treme-forte");
     void els.arena.offsetWidth;
-    els.arena.classList.add("is-treme", "is-flash");
-    return esperar(340).then(() => els.arena.classList.remove("is-treme", "is-flash"));
+    els.arena.classList.add("is-flash", forte ? "is-treme-forte" : "is-treme");
+    return esperar(forte ? 420 : 340).then(() => {
+      els.arena.classList.remove("is-treme", "is-treme-forte", "is-flash");
+    });
   }
 
   function setBarra(preenchimento, meter, atual, maximo, txt, barraPai) {
@@ -1155,6 +1186,8 @@
       await animar(elAtor, "is-magia", 420);
       if (estado.audio) estado.audio.hit();
       vibrar(ator.chefe ? 28 : 18);
+      if (atorChave === "jogador") estado.stats.danoFeito += resultado.dano;
+      else estado.stats.danoTomado += resultado.dano;
       soltarNumero(
         ladoAlvo,
         `−${resultado.dano}`,
@@ -1167,8 +1200,8 @@
         relatar(`${TEXTO.inimigoMagia(ator.nome, ator.magia.nome, resultado.dano)}${extra}`);
       }
       pintarHud();
-      const hit = animar(elAlvo, "is-hit", 420);
-      const treme = tremerArena();
+      const hit = animar(elAlvo, "is-hit", ator.chefe ? 520 : 420);
+      const treme = tremerArena(!!ator.chefe);
       await Promise.all([hit, treme]);
       return;
     }
@@ -1184,6 +1217,8 @@
       : resultado.bloqueado
         ? "numero-flutuante--guarda"
         : "numero-flutuante--dano";
+    if (atorChave === "jogador") estado.stats.danoFeito += resultado.dano;
+    else estado.stats.danoTomado += resultado.dano;
     soltarNumero(ladoAlvo, `−${resultado.dano}`, classeNum);
     const partes = [];
     if (atorChave === "jogador") partes.push(TEXTO.voceAtacou(resultado.dano, alvo.nome));
@@ -1192,8 +1227,8 @@
     if (resultado.bloqueado) partes.push(TEXTO.escudoAbsorveu);
     relatar(partes.join(" "));
     pintarHud();
-    const hit = animar(elAlvo, "is-hit", 400);
-    const treme = tremerArena();
+    const hit = animar(elAlvo, "is-hit", critico || ator.chefe ? 500 : 400);
+    const treme = tremerArena(!!(critico || ator.chefe));
     await Promise.all([hit, treme]);
   }
 
@@ -1205,6 +1240,10 @@
     estado.ocupado = true;
     setVezInimigo(false);
     setBotoes(false);
+    if (els.fimResumo && tipo !== "campanha") {
+      els.fimResumo.hidden = true;
+      els.fimResumo.textContent = "";
+    }
     els.app.classList.toggle("is-vitoria", tipo !== "derrota");
     els.app.classList.toggle("is-derrota", tipo === "derrota");
     els.btnRetry.hidden = tipo !== "derrota";
@@ -1228,11 +1267,16 @@
       els.lutadorInimigo.classList.add("is-cair");
       if (estado.audio) estado.audio.vitoria();
       if (estado.circulo >= TOTAL_CIRCULOS - 1) {
+        estado.stats.circulos = TOTAL_CIRCULOS;
         estado.fase = "concluida";
         gravarCampanha();
         els.fimSelo.textContent = TEXTO.fimSeloCampanha;
         els.fimTitulo.textContent = TEXTO.campanhaVencida;
         els.fimTexto.textContent = TEXTO.venceuCampanha(estado.inimigo.titulo, estado.rodada);
+        if (els.fimResumo) {
+          els.fimResumo.hidden = false;
+          els.fimResumo.textContent = TEXTO.resumoCampanha(estado.stats);
+        }
         mostrarFim("campanha");
         return;
       }
@@ -1305,11 +1349,14 @@
     estado.melhorias.forEach((m) => {
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "melhoria";
+      const tipo = m.tipo || "poder";
+      btn.className = `melhoria melhoria--${tipo}`;
       btn.dataset.melhoria = m.id;
+      btn.dataset.tipo = tipo;
       const detalhe = m.detalhe(j);
-      btn.setAttribute("aria-label", `${m.nome}. ${detalhe}`);
-      btn.innerHTML = `<span class="melhoria__nome">${m.nome}</span><span class="melhoria__desc">${detalhe}</span>`;
+      const selo = m.selo || "Reforço";
+      btn.setAttribute("aria-label", `${selo}. ${m.nome}. ${detalhe}`);
+      btn.innerHTML = `<span class="melhoria__selo">${selo}</span><span class="melhoria__nome">${m.nome}</span><span class="melhoria__desc">${detalhe}</span>`;
       btn.addEventListener("click", () => escolherMelhoria(m.id));
       els.melhorias.appendChild(btn);
     });
@@ -1317,6 +1364,7 @@
 
   function irAoDescanso() {
     descansoCuraLeve();
+    estado.stats.circulos += 1;
     estado.circulo += 1;
     estado.fase = "descanso";
     estado.melhorias = sortearMelhorias(estado.jogador);
@@ -1364,6 +1412,7 @@
     await resolverAcao("jogador", acao);
     const recapJogador = els.relato.textContent;
     if (algumMorreu()) {
+      estado.stats.turnos += 1;
       encerrar(estado.inimigo.vida <= 0);
       return;
     }
@@ -1377,6 +1426,7 @@
     await resolverAcao("inimigo", acaoIA);
     const recapInimigo = els.relato.textContent;
     if (algumMorreu()) {
+      estado.stats.turnos += 1;
       encerrar(estado.inimigo.vida <= 0);
       return;
     }
@@ -1387,10 +1437,11 @@
       }
     }
     estado.rodada += 1;
+    estado.stats.turnos += 1;
     els.txtVez.textContent = TEXTO.suaVez;
     setVezInimigo(false);
     pintarHud();
-    relatar(`${recapJogador} ${recapInimigo}`);
+    relatar(`${recapJogador} · ${recapInimigo}`);
     estado.ocupado = false;
     setBotoes(true);
     gravarCampanha();
@@ -1401,6 +1452,7 @@
     estado.fase = "luta";
     estado.jogador = clonarLutador(NARA);
     estado.melhorias = [];
+    resetStats();
     iniciarCirculo({ curarJogador: true });
   }
 
@@ -1410,6 +1462,7 @@
       novaCampanha();
       return;
     }
+    if (!estado.stats || !estado.stats.turnos) resetStats();
     estado.circulo = Math.max(0, Math.min(TOTAL_CIRCULOS - 1, save.circulo | 0));
     estado.jogador = hidratarJogador(save.jogador);
     if (save.fase === "descanso") {

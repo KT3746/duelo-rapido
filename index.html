@@ -10,15 +10,16 @@
   <meta name="apple-mobile-web-app-title" content="Duelo Rápido">
   <meta name="mobile-web-app-capable" content="yes">
   <title>Duelo Rápido</title>
-  <link rel="icon" href="favicon.svg?v=1.2.1" type="image/svg+xml">
-  <link rel="manifest" href="manifest.webmanifest?v=1.2.1">
-  <link rel="stylesheet" href="css/estilo.css?v=1.2.1">
+  <link rel="icon" href="favicon.svg?v=1.3.0" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest?v=1.3.0">
+  <link rel="stylesheet" href="css/estilo.css?v=1.3.0">
 </head>
 <body>
   <noscript>
     <p>O Duelo Rápido precisa de JavaScript para jogar. Ative e recarregue a página.</p>
   </noscript>
 
+  <a class="skip-link" href="#acoes">Ir às ações</a>
   <div id="app" class="app">
     <button type="button" id="btn-som" class="btn-som" aria-pressed="false" aria-label="Ativar ou silenciar sons">
       <span class="btn-som__icone" aria-hidden="true"></span>
@@ -215,6 +216,7 @@
         <p class="fim-selo" id="fim-selo">Fim de duelo</p>
         <h2 id="fim-titulo">Vitória</h2>
         <p id="fim-texto">Nara venceu.</p>
+        <p id="fim-resumo" class="fim-resumo" hidden></p>
         <div class="fim-acoes">
           <button type="button" id="btn-retry" class="btn btn--principal">Tentar de novo</button>
           <button type="button" id="btn-reiniciar" class="btn btn--fantasma">Reiniciar campanha</button>
@@ -224,6 +226,6 @@
     </div>
   </div>
 
-  <script src="js/jogo.js?v=1.2.1"></script>
+  <script src="js/jogo.js?v=1.3.0"></script>
 </body>
 </html>
