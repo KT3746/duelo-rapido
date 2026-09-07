@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const VERSAO = "1.2.0";
+  const VERSAO = "1.2.1";
   const CHAVE = "duelo-rapido";
   const TOTAL_CIRCULOS = 10;
 
@@ -38,6 +38,9 @@
     rival: "Rival",
     chefe: "Chefe",
     chefeFinal: "Chefe final",
+    entradaChefe: "Chefe",
+    entradaChefeFinal: "Chefe final",
+    entradaChefeTexto: (titulo, nota) => `${titulo} toma o círculo. ${nota}`,
     descansoSelo: (n) => `Círculo ${n}/${TOTAL_CIRCULOS} concluído`,
     descansoTexto: "Nara recupera o fôlego. O próximo círculo já espera — escolha um reforço.",
     proximo: "Próximo círculo",
@@ -483,6 +486,10 @@
     btnSomTxt: document.querySelector(".btn-som__txt"),
     modalTutorial: document.getElementById("modal-tutorial"),
     btnEntendi: document.getElementById("btn-entendi"),
+    modalChefe: document.getElementById("modal-chefe"),
+    chefeSelo: document.getElementById("chefe-selo"),
+    chefeTitulo: document.getElementById("chefe-titulo"),
+    chefeTexto: document.getElementById("chefe-texto"),
     modalFim: document.getElementById("modal-fim"),
     fimSelo: document.getElementById("fim-selo"),
     fimTitulo: document.getElementById("fim-titulo"),
@@ -801,6 +808,14 @@
         });
         noise(t + 0.05, 0.1, 0.015, "highpass", 2500);
       },
+      chefe() {
+        const t = agora();
+        noise(t, 0.18, 0.04, "lowpass", 280);
+        sweep("sawtooth", 90, 180, t, 0.22, 0.04);
+        osc("triangle", 110, t + 0.05, 0.28, 0.035);
+        osc("sine", 220, t + 0.16, 0.24, 0.03);
+        osc("sine", 330, t + 0.28, 0.3, 0.025);
+      },
       ui() {
         const t = agora();
         osc("sine", 740, t, 0.05, 0.02);
@@ -950,7 +965,22 @@
     els.placaInimigo.classList.toggle("is-chefe", !!rival.chefe);
   }
 
-  function iniciarCirculo(opcoes) {
+  async function mostrarEntradaChefe(rival) {
+    if (!els.modalChefe) return;
+    const final = rival.chefe === "final";
+    els.chefeSelo.textContent = final ? TEXTO.entradaChefeFinal : TEXTO.entradaChefe;
+    els.chefeTitulo.textContent = rival.titulo || rival.nome;
+    els.chefeTexto.textContent = TEXTO.entradaChefeTexto(rival.titulo || rival.nome, rival.nota || "");
+    els.modalChefe.hidden = false;
+    els.telaLuta.classList.add("is-entrada-chefe");
+    if (estado.audio) estado.audio.chefe();
+    vibrar(final ? 36 : 24);
+    await esperar(final ? 1600 : 1300);
+    els.modalChefe.hidden = true;
+    els.telaLuta.classList.remove("is-entrada-chefe");
+  }
+
+  async function iniciarCirculo(opcoes) {
     const opts = opcoes || {};
     const rival = rivalAtual();
     if (opts.curarJogador || estado.jogador.vida <= 0) {
@@ -962,19 +992,25 @@
     estado.jogador.atingidoNestaRodada = false;
     estado.inimigo = clonarLutador(rival);
     estado.rodada = 1;
-    estado.ocupado = false;
+    estado.ocupado = true;
     estado.fase = "luta";
     estado.resultado = null;
     els.app.classList.remove("is-vitoria", "is-derrota");
     els.modalFim.hidden = true;
+    if (els.modalChefe) els.modalChefe.hidden = true;
     prepararRivalVisual(rival);
     mostrarTela("luta");
     pintarHud();
     els.txtVez.textContent = TEXTO.suaVez;
     setVezInimigo(false);
     relatar(TEXTO.inicioRelato(rival.titulo, rival.nota));
-    setBotoes(true);
+    setBotoes(false);
     gravarCampanha();
+    if (rival.chefe) {
+      await mostrarEntradaChefe(rival);
+    }
+    estado.ocupado = false;
+    setBotoes(true);
     els.btnAtacar.focus();
   }
 
