@@ -432,7 +432,7 @@ button:focus-visible {
   font-weight: 800;
 }
 
-.tela-luta.is-vez-inimigo .centro-turno {
+.tela--luta.is-vez-inimigo .centro-turno {
   padding: 10px 14px;
   border-radius: 14px;
   background: rgba(255, 106, 61, 0.28);
@@ -440,19 +440,19 @@ button:focus-visible {
   box-shadow: 0 0 22px rgba(255, 106, 61, 0.45);
 }
 
-.tela-luta.is-vez-inimigo .centro-turno__vez {
+.tela--luta.is-vez-inimigo .centro-turno__vez {
   color: #ffe0c8;
   font-size: 1.15em;
   letter-spacing: 0.02em;
   animation: pulso-vez-inimigo 1.15s ease-in-out infinite;
 }
 
-.tela-luta.is-vez-inimigo .placa--inimigo {
+.tela--luta.is-vez-inimigo .placa--inimigo {
   outline: 2px solid rgba(255, 140, 80, 0.7);
   box-shadow: 0 0 16px rgba(255, 106, 61, 0.35);
 }
 
-.tela-luta.is-vez-inimigo .acoes {
+.tela--luta.is-vez-inimigo .acoes {
   opacity: 0.4;
   filter: saturate(0.55);
   pointer-events: none;
