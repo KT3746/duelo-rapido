@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const VERSAO = "1.1.6";
+  const VERSAO = "1.2.0";
   const CHAVE = "duelo-rapido";
   const TOTAL_CIRCULOS = 10;
 
@@ -679,19 +679,74 @@
     const Ctx = window.AudioContext || window.webkitAudioContext;
     if (!Ctx) return null;
     const ctx = new Ctx();
+    const master = ctx.createGain();
+    master.gain.value = 0.85;
+    master.connect(ctx.destination);
 
-    function tom(freq, dur, tipo, ganho) {
+    function agora() {
+      return ctx.currentTime;
+    }
+
+    function env(gainNode, t0, a, d, s, r, peak) {
+      const g = gainNode.gain;
+      g.cancelScheduledValues(t0);
+      g.setValueAtTime(0.0001, t0);
+      g.linearRampToValueAtTime(peak, t0 + a);
+      g.linearRampToValueAtTime(peak * s, t0 + a + d);
+      g.exponentialRampToValueAtTime(0.0001, t0 + a + d + r);
+    }
+
+    function osc(tipo, freq, t0, dur, peak, detune) {
+      if (estado.mudo || ctx.state === "closed") return null;
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = tipo;
+      o.frequency.setValueAtTime(freq, t0);
+      if (detune) o.detune.setValueAtTime(detune, t0);
+      g.gain.setValueAtTime(0.0001, t0);
+      o.connect(g);
+      g.connect(master);
+      o.start(t0);
+      o.stop(t0 + dur + 0.05);
+      env(g, t0, Math.min(0.02, dur * 0.15), dur * 0.25, 0.55, Math.max(0.04, dur * 0.55), peak);
+      return o;
+    }
+
+    function noise(t0, dur, peak, filtroTipo, filtroFreq) {
       if (estado.mudo || ctx.state === "closed") return;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = tipo;
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(ganho, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + dur);
+      const n = Math.max(1, Math.floor(ctx.sampleRate * dur));
+      const buf = ctx.createBuffer(1, n, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < n; i++) data[i] = Math.random() * 2 - 1;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const filter = ctx.createBiquadFilter();
+      filter.type = filtroTipo || "bandpass";
+      filter.frequency.setValueAtTime(filtroFreq || 1200, t0);
+      filter.Q.value = 0.8;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t0);
+      src.connect(filter);
+      filter.connect(g);
+      g.connect(master);
+      env(g, t0, 0.005, dur * 0.2, 0.35, dur * 0.7, peak);
+      src.start(t0);
+      src.stop(t0 + dur + 0.02);
+    }
+
+    function sweep(tipo, f0, f1, t0, dur, peak) {
+      if (estado.mudo || ctx.state === "closed") return;
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = tipo;
+      o.frequency.setValueAtTime(f0, t0);
+      o.frequency.exponentialRampToValueAtTime(Math.max(40, f1), t0 + dur);
+      g.gain.setValueAtTime(0.0001, t0);
+      o.connect(g);
+      g.connect(master);
+      env(g, t0, 0.01, dur * 0.3, 0.4, dur * 0.55, peak);
+      o.start(t0);
+      o.stop(t0 + dur + 0.04);
     }
 
     return {
@@ -699,13 +754,57 @@
       acordar() {
         if (ctx.state === "suspended") ctx.resume();
       },
-      atacar() { tom(180, 0.12, "square", 0.05); },
-      defender() { tom(320, 0.16, "triangle", 0.04); },
-      magia() { tom(520, 0.22, "sawtooth", 0.035); setTimeout(() => tom(780, 0.18, "sine", 0.03), 80); },
-      hit() { tom(110, 0.1, "square", 0.05); },
-      vitoria() { tom(523, 0.16, "sine", 0.04); setTimeout(() => tom(659, 0.16, "sine", 0.04), 120); setTimeout(() => tom(784, 0.22, "sine", 0.04), 240); },
-      derrota() { tom(196, 0.28, "triangle", 0.04); setTimeout(() => tom(147, 0.32, "sine", 0.035), 160); },
-      melhorar() { tom(440, 0.12, "sine", 0.04); setTimeout(() => tom(660, 0.16, "sine", 0.04), 90); },
+      atacar() {
+        const t = agora();
+        noise(t, 0.08, 0.045, "highpass", 900);
+        sweep("sawtooth", 220, 90, t, 0.11, 0.04);
+        osc("triangle", 160, t + 0.02, 0.09, 0.035);
+      },
+      defender() {
+        const t = agora();
+        osc("triangle", 380, t, 0.14, 0.04);
+        osc("sine", 570, t + 0.03, 0.16, 0.028);
+        noise(t, 0.06, 0.02, "lowpass", 700);
+      },
+      magia() {
+        const t = agora();
+        sweep("sawtooth", 420, 980, t, 0.18, 0.032);
+        osc("sine", 660, t + 0.05, 0.2, 0.03);
+        osc("sine", 990, t + 0.1, 0.18, 0.022);
+        noise(t + 0.04, 0.12, 0.025, "bandpass", 2200);
+      },
+      hit() {
+        const t = agora();
+        noise(t, 0.07, 0.055, "bandpass", 450);
+        sweep("square", 140, 55, t, 0.09, 0.035);
+        osc("triangle", 90, t + 0.01, 0.1, 0.03);
+      },
+      vitoria() {
+        const t = agora();
+        const notas = [523.25, 659.25, 783.99, 1046.5];
+        notas.forEach((f, i) => {
+          osc("sine", f, t + i * 0.11, 0.22, 0.04 - i * 0.004);
+          osc("triangle", f * 2, t + i * 0.11, 0.16, 0.012);
+        });
+      },
+      derrota() {
+        const t = agora();
+        sweep("sawtooth", 220, 90, t, 0.28, 0.035);
+        osc("triangle", 164, t + 0.12, 0.32, 0.03);
+        osc("sine", 110, t + 0.22, 0.36, 0.028);
+        noise(t, 0.2, 0.02, "lowpass", 400);
+      },
+      melhorar() {
+        const t = agora();
+        [523.25, 659.25, 880].forEach((f, i) => {
+          osc("sine", f, t + i * 0.07, 0.18, 0.032);
+        });
+        noise(t + 0.05, 0.1, 0.015, "highpass", 2500);
+      },
+      ui() {
+        const t = agora();
+        osc("sine", 740, t, 0.05, 0.02);
+      },
     };
   }
 
@@ -1358,11 +1457,13 @@
       ev.stopPropagation();
       if (!els.modalTutorial.hidden) return;
       garantirAudio();
+      if (estado.audio) estado.audio.ui();
       mostrarTutorial(novaCampanha);
     });
     els.btnContinuar.addEventListener("click", () => {
       if (!els.modalTutorial.hidden) return;
       garantirAudio();
+      if (estado.audio) estado.audio.ui();
       continuarCampanha();
     });
     els.btnNova.addEventListener("click", (ev) => {
@@ -1370,12 +1471,14 @@
       ev.stopPropagation();
       if (!els.modalTutorial.hidden) return;
       garantirAudio();
+      if (estado.audio) estado.audio.ui();
       mostrarTutorial(novaCampanha);
     });
     els.btnEntendi.addEventListener("click", (ev) => {
       ev.preventDefault();
       ev.stopPropagation();
       garantirAudio();
+      if (estado.audio) estado.audio.ui();
       fecharTutorial();
     });
     els.btnSom.addEventListener("click", () => {
