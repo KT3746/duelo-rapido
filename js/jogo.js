@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const VERSAO = "1.1.4";
+  const VERSAO = "1.1.5";
   const CHAVE = "duelo-rapido";
   const TOTAL_CIRCULOS = 10;
 
@@ -1235,7 +1235,9 @@
 
     els.txtVez.textContent = TEXTO.vezInimigo;
     setVezInimigo(true);
-    await esperar(380);
+    pintarHud();
+    // Tempo suficiente pra ler no celular: destaque + texto antes da ação do rival.
+    await esperar(1000);
     const acaoIA = escolherAcaoIA();
     await resolverAcao("inimigo", acaoIA);
     const recapInimigo = els.relato.textContent;
