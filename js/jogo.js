@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const VERSAO = "1.3.2";
+  const VERSAO = "1.3.3";
   const CHAVE = "duelo-rapido";
   const TOTAL_CIRCULOS = 10;
 
