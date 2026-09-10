@@ -1,13 +1,13 @@
-/* KOMEKU — campanha de 10 círculos (Nara vs rivais originais). */
+/* LUTA — campanha de 10 círculos (Nara vs rivais originais). */
 (() => {
   "use strict";
 
-  const VERSAO = "1.3.1";
+  const VERSAO = "1.3.2";
   const CHAVE = "duelo-rapido";
   const TOTAL_CIRCULOS = 10;
 
   const TEXTO = {
-    titulo: "KOMEKU",
+    titulo: "LUTA",
     suaVez: "Sua vez",
     vezInimigo: "Vez do inimigo",
     turno: (n) => `Turno ${n}`,
