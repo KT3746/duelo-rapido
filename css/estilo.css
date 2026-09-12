@@ -1,4 +1,4 @@
-/* Duelo Rápido — campanha de 10 círculos, HUD e ações em celular e desktop. */
+/* LUTA — campanha de 10 círculos, HUD e ações em celular e desktop. */
 :root {
   --fundo: #0a0c14;
   --fundo-2: #14182a;
@@ -140,24 +140,29 @@ button:focus-visible {
 .titulo-art__nara,
 .titulo-art__rival {
   position: absolute;
-  bottom: 32px;
-  width: 54px;
-  height: 92px;
-  border-radius: 18px 18px 8px 8px;
+  bottom: 28px;
+  width: 78px;
+  height: 116px;
+  background: none;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.4));
+}
+.titulo-art__nara svg,
+.titulo-art__rival svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .titulo-art__nara {
-  left: 18%;
-  background: linear-gradient(180deg, #d9fff8, #1a7a72);
-  box-shadow: 0 0 18px rgba(58, 214, 196, 0.45);
+  left: 12%;
+  filter: drop-shadow(0 0 16px rgba(58, 214, 196, 0.45));
   animation: flutuatitulo 2.8s ease-in-out infinite;
 }
 
 .titulo-art__rival {
-  right: 18%;
-  width: 66px;
-  background: linear-gradient(180deg, #ffb089, #7a2b16);
-  box-shadow: 0 0 18px rgba(255, 106, 61, 0.4);
+  right: 10%;
+  width: 86px;
+  filter: drop-shadow(0 0 16px rgba(255, 106, 61, 0.4));
   animation: flutuatitulo 2.8s ease-in-out infinite 0.4s;
 }
 
@@ -1481,4 +1486,40 @@ button:focus-visible,
   color: #f3ead8;
   font-size: 0.92rem;
   line-height: 1.4;
+}
+
+
+/* 1.4.0 — arena e lutadores mais sofisticados */
+.arena {
+  box-shadow: inset 0 -30px 50px rgba(0, 0, 0, 0.28), 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+.arena::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: radial-gradient(ellipse at 50% 70%, transparent 42%, rgba(6, 8, 14, 0.38) 100%);
+}
+.arena__chao {
+  background:
+    radial-gradient(ellipse, rgba(232, 195, 106, 0.34), rgba(20, 16, 18, 0.08) 68%),
+    repeating-linear-gradient(90deg, rgba(243, 234, 216, 0.04) 0 8px, transparent 8px 18px);
+}
+.lutador__svg {
+  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.06));
+}
+.lutador--nara .lutador__svg {
+  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 14px rgba(58, 214, 196, 0.28));
+}
+.lutador--inimigo.is-chefe .lutador__svg {
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 16px rgba(232, 195, 106, 0.32));
+}
+.lutador__sombra {
+  height: 16px;
+  background: rgba(0, 0, 0, 0.42);
+  filter: blur(4px);
+}
+.placa {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
 }

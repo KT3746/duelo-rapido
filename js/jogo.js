@@ -1,8 +1,8 @@
-/* LUTA — campanha de 10 círculos (Nara vs rivais originais). */
+/* LUTA — campanha de 10 círculos (Nara vs rivais originais). Visual 1.4.0. */
 (() => {
   "use strict";
 
-  const VERSAO = "1.3.3";
+  const VERSAO = "1.4.0";
   const CHAVE = "duelo-rapido";
   const TOTAL_CIRCULOS = 10;
 
@@ -228,141 +228,16 @@
   const CAMPANHA = ["liro", "dagro", "velin", "bruma", "korr", "sile", "ravo", "neme", "orvane", "aurenegra"];
 
   const ARTES = {
-    liro: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true">
-      <defs><linearGradient id="liro-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8d59a"/><stop offset="1" stop-color="#6b7a32"/></linearGradient></defs>
-      <path d="M78 28 L84 148" stroke="#c4a35a" stroke-width="3"/>
-      <path d="M78 28 L92 40 L80 36 Z" fill="#d7c48a"/>
-      <rect x="52" y="70" width="16" height="48" rx="4" fill="url(#liro-corpo)"/>
-      <rect x="52" y="118" width="6" height="28" rx="2" fill="#3d4a22"/>
-      <rect x="62" y="118" width="6" height="28" rx="2" fill="#3d4a22"/>
-      <path d="M52 74 L38 96 L44 100 L56 80 Z" fill="#c9d48a"/>
-      <path d="M68 74 L86 64 L90 72 L70 84 Z" fill="#dfe6a4"/>
-      <ellipse cx="60" cy="40" rx="12" ry="13" fill="#f0e2c0"/>
-      <path d="M48 38 C50 18 74 16 74 40 C66 32 54 32 48 38 Z" fill="#5c6b2a"/>
-      <path d="M46 52 L74 56 L70 68 L50 64 Z" fill="#8a9a44"/>
-      <circle cx="56" cy="41" r="1.6" fill="#2a3010"/>
-      <circle cx="64" cy="41" r="1.6" fill="#2a3010"/>
-    </svg>`,
-    dagro: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true">
-      <defs><linearGradient id="dagro-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb089"/><stop offset="1" stop-color="#7a2b16"/></linearGradient></defs>
-      <path d="M28 70 L92 70 L100 122 L20 122 Z" fill="url(#dagro-corpo)"/>
-      <rect x="34" y="122" width="16" height="24" rx="3" fill="#3b1b14"/>
-      <rect x="70" y="122" width="16" height="24" rx="3" fill="#3b1b14"/>
-      <path d="M36 70 L18 96 L30 102 L46 78 Z" fill="#c45a32"/>
-      <path d="M84 70 L110 88 L100 98 L76 80 Z" fill="#e27a42"/>
-      <ellipse cx="60" cy="42" rx="20" ry="18" fill="#2a1612"/>
-      <path d="M42 36 L50 18 L58 36 Z" fill="#ff8a3d"/>
-      <path d="M62 36 L70 16 L78 36 Z" fill="#ff8a3d"/>
-      <rect x="48" y="38" width="24" height="10" rx="3" fill="#1a0d0a"/>
-      <circle cx="54" cy="43" r="2.2" fill="#ffd36a"/>
-      <circle cx="66" cy="43" r="2.2" fill="#ffd36a"/>
-      <path d="M40 92 L80 92" stroke="#ffb16a" stroke-width="3" opacity="0.6"/>
-    </svg>`,
-    velin: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true">
-      <defs><linearGradient id="velin-manto" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d7c4ff"/><stop offset="1" stop-color="#3b1f6e"/></linearGradient></defs>
-      <path d="M60 28 C18 48 16 130 36 150 C50 120 54 90 60 70 C66 90 70 120 84 150 C104 130 102 48 60 28 Z" fill="url(#velin-manto)"/>
-      <path d="M44 40 C48 18 72 18 76 42 C66 36 54 36 44 40 Z" fill="#1b1030"/>
-      <ellipse cx="60" cy="48" rx="12" ry="13" fill="#e8dffc"/>
-      <path d="M48 44 L72 44 L68 58 L52 58 Z" fill="#2a1848"/>
-      <circle cx="56" cy="50" r="1.8" fill="#c084fc"/>
-      <circle cx="64" cy="50" r="1.8" fill="#c084fc"/>
-      <circle class="rival-orbe" cx="24" cy="88" r="6" fill="#f0abfc"/>
-      <circle class="rival-orbe" cx="96" cy="96" r="5" fill="#a78bfa"/>
-    </svg>`,
-    bruma: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true">
-      <defs><linearGradient id="bruma-manto" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef6ff"/><stop offset="1" stop-color="#5a7388"/></linearGradient></defs>
-      <ellipse cx="60" cy="142" rx="38" ry="10" fill="#9bb4c8" opacity="0.45"/>
-      <path d="M60 32 C22 50 10 110 28 148 C48 120 50 88 60 64 C70 88 72 120 92 148 C110 110 98 50 60 32 Z" fill="url(#bruma-manto)" opacity="0.92"/>
-      <ellipse cx="60" cy="46" rx="13" ry="14" fill="#f4fbff"/>
-      <path d="M44 48 L76 48 L72 70 L48 70 Z" fill="#d5e4f0" opacity="0.85"/>
-      <path d="M42 40 C50 28 70 28 78 42" fill="none" stroke="#c5d8e8" stroke-width="4"/>
-      <circle cx="55" cy="48" r="1.7" fill="#3a5164"/>
-      <circle cx="65" cy="48" r="1.7" fill="#3a5164"/>
-    </svg>`,
-    korr: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true">
-      <defs><linearGradient id="korr-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2c48a"/><stop offset="1" stop-color="#5a3a1c"/></linearGradient></defs>
-      <path d="M18 68 L102 68 L112 128 L8 128 Z" fill="url(#korr-corpo)"/>
-      <rect x="28" y="128" width="22" height="20" rx="2" fill="#3a2814"/>
-      <rect x="70" y="128" width="22" height="20" rx="2" fill="#3a2814"/>
-      <path d="M24 72 L8 108 L28 112 L40 80 Z" fill="#b8894a"/>
-      <path d="M96 72 L116 100 L98 112 L84 80 Z" fill="#c99a58"/>
-      <rect x="40" y="84" width="40" height="10" fill="#8a6230"/>
-      <rect x="44" y="102" width="32" height="8" fill="#8a6230"/>
-      <ellipse cx="60" cy="46" rx="16" ry="14" fill="#c4a06a"/>
-      <rect x="48" y="42" width="24" height="8" rx="2" fill="#2a1c10"/>
-      <circle cx="54" cy="46" r="2" fill="#f0d48a"/>
-      <circle cx="66" cy="46" r="2" fill="#f0d48a"/>
-    </svg>`,
-    sile: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true">
-      <defs><linearGradient id="sile-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8fbff"/><stop offset="1" stop-color="#3a7ca8"/></linearGradient></defs>
-      <path d="M86 18 L90 148" stroke="#9ad4f0" stroke-width="3"/>
-      <polygon points="90,18 102,34 90,30 78,34" fill="#c4f0ff"/>
-      <circle class="rival-orbe" cx="90" cy="18" r="6" fill="#e8ffff"/>
-      <path d="M50 74 L70 74 L74 122 L46 122 Z" fill="url(#sile-corpo)"/>
-      <rect x="50" y="122" width="7" height="26" rx="2" fill="#1e4a66"/>
-      <rect x="63" y="122" width="7" height="26" rx="2" fill="#1e4a66"/>
-      <path d="M50 78 L34 110 L42 114 L54 86 Z" fill="#bfe8f8"/>
-      <path d="M70 78 L82 70 L86 78 L72 88 Z" fill="#d7f4ff"/>
-      <ellipse cx="60" cy="42" rx="13" ry="14" fill="#f3fbff"/>
-      <path d="M44 40 C48 8 84 8 78 44 C70 28 50 28 44 40 Z" fill="#d8f0ff"/>
-      <circle cx="55" cy="43" r="1.7" fill="#245a78"/>
-      <circle cx="65" cy="43" r="1.7" fill="#245a78"/>
-    </svg>`,
-    ravo: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true">
-      <defs><linearGradient id="ravo-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a6a"/><stop offset="1" stop-color="#6a1010"/></linearGradient></defs>
-      <path d="M24 66 L96 66 L104 120 L16 120 Z" fill="url(#ravo-corpo)"/>
-      <rect x="32" y="120" width="18" height="26" rx="3" fill="#3a0c0c"/>
-      <rect x="70" y="120" width="18" height="26" rx="3" fill="#3a0c0c"/>
-      <path d="M28 70 L6 92 L22 108 L44 80 Z" fill="#d94a32"/>
-      <path d="M92 70 L118 86 L108 108 L80 80 Z" fill="#ff6a40"/>
-      <path d="M18 88 L4 80 L20 96" fill="#ffcc66"/>
-      <path d="M110 82 L120 70 L112 96" fill="#ffcc66"/>
-      <ellipse cx="60" cy="40" rx="18" ry="16" fill="#4a1210"/>
-      <path d="M48 28 L52 10 L58 30 Z" fill="#ff5a3a"/>
-      <path d="M58 26 L62 6 L68 28 Z" fill="#ffd36a"/>
-      <path d="M68 28 L74 12 L78 30 Z" fill="#ff5a3a"/>
-      <circle cx="54" cy="42" r="2.2" fill="#ffe08a"/>
-      <circle cx="68" cy="42" r="2.2" fill="#ffe08a"/>
-    </svg>`,
-    neme: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true">
-      <defs><linearGradient id="neme-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7dffd4"/><stop offset="1" stop-color="#0a2e2a"/></linearGradient></defs>
-      <path d="M40 88 L78 80 L86 128 L32 132 Z" fill="url(#neme-corpo)"/>
-      <rect x="40" y="128" width="10" height="20" rx="2" fill="#08221e"/>
-      <rect x="62" y="124" width="10" height="24" rx="2" fill="#08221e"/>
-      <path d="M42 92 L22 118 L32 122 L50 98 Z" fill="#1a5c54"/>
-      <path d="M76 84 L108 70 L112 78 L80 94 Z" fill="#3ae0c0"/>
-      <path d="M108 70 L118 62 L114 80 Z" fill="#d7fff4"/>
-      <ellipse cx="58" cy="58" rx="13" ry="12" fill="#0e2a26"/>
-      <path d="M46 56 L70 54 L68 66 L48 68 Z" fill="#163a34"/>
-      <circle cx="54" cy="60" r="1.8" fill="#7dffd4"/>
-      <circle cx="64" cy="58" r="1.8" fill="#7dffd4"/>
-    </svg>`,
-    orvane: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true">
-      <defs><linearGradient id="orvane-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0d48a"/><stop offset="1" stop-color="#2a1210"/></linearGradient></defs>
-      <path d="M88 56 C108 80 110 130 86 150 L60 120 Z" fill="#4a1c18" opacity="0.9"/>
-      <path d="M26 70 L94 70 L100 124 L20 124 Z" fill="url(#orvane-corpo)"/>
-      <rect x="32" y="124" width="18" height="22" rx="2" fill="#1a0e0c"/>
-      <rect x="70" y="124" width="18" height="22" rx="2" fill="#1a0e0c"/>
-      <path d="M30 74 L12 104 L28 108 L44 80 Z" fill="#c9a45a"/>
-      <path d="M90 74 L112 96 L98 108 L78 80 Z" fill="#e0c070"/>
-      <path d="M38 40 L60 18 L82 40 L74 70 L46 70 Z" fill="#2a1814"/>
-      <path d="M50 36 L60 24 L70 36" fill="#e8c36a"/>
-      <rect x="48" y="44" width="24" height="10" rx="2" fill="#120a08"/>
-      <circle cx="54" cy="49" r="2" fill="#e8c36a"/>
-      <circle cx="66" cy="49" r="2" fill="#e8c36a"/>
-    </svg>`,
-    aurenegra: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true">
-      <defs><linearGradient id="aure-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8c36a"/><stop offset="1" stop-color="#1a0820"/></linearGradient></defs>
-      <circle cx="60" cy="48" r="28" fill="none" stroke="#e8c36a" stroke-width="3" opacity="0.7"/>
-      <path d="M60 20 C16 50 18 130 40 152 C52 120 54 88 60 66 C66 88 68 120 80 152 C102 130 104 50 60 20 Z" fill="url(#aure-corpo)"/>
-      <path d="M36 36 L60 12 L84 36 L76 28 L60 22 L44 28 Z" fill="#e8c36a"/>
-      <ellipse cx="60" cy="50" rx="12" ry="13" fill="#f3ead8"/>
-      <path d="M48 46 L72 46 L68 60 L52 60 Z" fill="#120814"/>
-      <circle cx="55" cy="51" r="1.8" fill="#b08cff"/>
-      <circle cx="65" cy="51" r="1.8" fill="#b08cff"/>
-      <circle class="rival-orbe" cx="22" cy="86" r="6" fill="#e8c36a"/>
-      <circle class="rival-orbe" cx="98" cy="90" r="6" fill="#b08cff"/>
-    </svg>`,
+    liro: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true"> <defs> <linearGradient id="liro-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3e6b0"/><stop offset="1" stop-color="#4a5a22"/></linearGradient> <linearGradient id="liro-cabelo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7a8a38"/><stop offset="1" stop-color="#2c3612"/></linearGradient> </defs> <ellipse cx="60" cy="150" rx="20" ry="4.5" fill="#000" opacity="0.2"/> <path d="M82 24 L90 148" stroke="#c4a35a" stroke-width="3.2" stroke-linecap="round"/> <path d="M82 22 L102 42 L86 36 Z" fill="#efe0a8"/> <path d="M82 22 L70 40 L84 34 Z" fill="#d7c48a"/> <path d="M50 70 L70 70 L74 116 L46 116 Z" fill="url(#liro-corpo)"/> <path d="M48 88 L72 88" stroke="#dfe6a4" stroke-width="1.2" opacity="0.4"/> <rect x="50" y="116" width="7" height="28" rx="2.5" fill="#2e3a18"/> <rect x="62" y="116" width="7" height="28" rx="2.5" fill="#2e3a18"/> <path d="M50 142 L57 142 L58 150 L49 150 Z" fill="#1c2410"/> <path d="M62 142 L69 142 L70 150 L61 150 Z" fill="#1c2410"/> <path d="M50 76 L34 104 L42 108 L56 82 Z" fill="#c9d48a"/> <path d="M70 74 L88 58 L94 68 L72 86 Z" fill="#dfe6a4"/> <ellipse cx="60" cy="40" rx="12.5" ry="13.5" fill="#f4e4c4"/> <path d="M46 38 C48 14 76 12 76 40 C68 30 52 30 46 38 Z" fill="url(#liro-cabelo)"/> <path d="M48 52 L72 56 L68 68 L50 64 Z" fill="#6d7c34"/> <circle cx="55" cy="41" r="1.7" fill="#2a3010"/> <circle cx="64" cy="41" r="1.7" fill="#2a3010"/> <circle cx="56" cy="40.2" r="0.55" fill="#fff"/> </svg>`,
+    dagro: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true"> <defs> <linearGradient id="dagro-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffc4a0"/><stop offset="1" stop-color="#6a2010"/></linearGradient> </defs> <ellipse cx="60" cy="150" rx="26" ry="5" fill="#000" opacity="0.22"/> <path d="M22 68 L98 68 L108 122 L12 122 Z" fill="url(#dagro-corpo)"/> <path d="M30 90 L90 90" stroke="#ffb16a" stroke-width="3" opacity="0.45"/> <path d="M36 78 L84 78" stroke="#3a140e" stroke-width="2" opacity="0.35"/> <rect x="30" y="122" width="18" height="24" rx="3" fill="#2a120e"/> <rect x="72" y="122" width="18" height="24" rx="3" fill="#2a120e"/> <path d="M30 144 L48 144 L50 152 L28 152 Z" fill="#1a0a08"/> <path d="M72 144 L90 144 L92 152 L70 152 Z" fill="#1a0a08"/> <path d="M32 70 L10 100 L26 108 L46 80 Z" fill="#c45a32"/> <path d="M88 70 L116 90 L104 104 L76 82 Z" fill="#e27a42"/> <ellipse cx="60" cy="42" rx="19" ry="17" fill="#2a1612"/> <path d="M42 34 L51 12 L58 36 Z" fill="#ff8a3d"/> <path d="M62 34 L70 10 L78 36 Z" fill="#ff8a3d"/> <rect x="46" y="38" width="28" height="11" rx="3" fill="#140a08"/> <circle cx="54" cy="43.5" r="2.3" fill="#ffd36a"/> <circle cx="66" cy="43.5" r="2.3" fill="#ffd36a"/> <path d="M48 56 Q60 62 72 56" fill="none" stroke="#8a3a22" stroke-width="1.4"/> </svg>`,
+    velin: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true"> <defs> <linearGradient id="velin-manto" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#efe6ff"/><stop offset="1" stop-color="#2a1258"/></linearGradient> </defs> <ellipse cx="60" cy="150" rx="24" ry="5" fill="#000" opacity="0.18"/> <path d="M60 24 C14 48 12 128 34 152 C50 118 54 88 60 66 C66 88 70 118 86 152 C108 128 106 48 60 24 Z" fill="url(#velin-manto)"/> <path d="M42 70 C36 100 40 130 50 148 C56 120 58 94 60 74 Z" fill="#1b1030" opacity="0.35"/> <path d="M44 38 C48 14 74 14 78 40 C68 32 52 32 44 38 Z" fill="#120c24"/> <ellipse cx="60" cy="48" rx="12.5" ry="13.5" fill="#efe6ff"/> <path d="M48 44 L72 44 L68 60 L52 60 Z" fill="#2a1848"/> <circle cx="55" cy="50" r="1.9" fill="#c084fc"/> <circle cx="65" cy="50" r="1.9" fill="#c084fc"/> <circle cx="56.2" cy="49.2" r="0.55" fill="#fff"/> <circle class="rival-orbe" cx="22" cy="88" r="6.5" fill="#f0abfc"/> <circle class="rival-orbe" cx="22" cy="88" r="10" fill="none" stroke="#f0abfc" stroke-width="1" opacity="0.4"/> <circle class="rival-orbe" cx="98" cy="96" r="5.5" fill="#a78bfa"/> </svg>`,
+    bruma: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true"> <defs> <linearGradient id="bruma-manto" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7fbff"/><stop offset="1" stop-color="#4a6478"/></linearGradient> </defs> <ellipse cx="60" cy="148" rx="36" ry="8" fill="#9bb4c8" opacity="0.4"/> <path d="M60 28 C18 50 8 112 26 150 C48 118 50 86 60 60 C70 86 72 118 94 150 C112 112 102 50 60 28 Z" fill="url(#bruma-manto)" opacity="0.94"/> <path d="M36 90 C28 120 40 142 52 150 C50 120 54 90 60 68 Z" fill="#d5e4f0" opacity="0.35"/> <ellipse cx="60" cy="46" rx="13.5" ry="14.5" fill="#f7fbff"/> <path d="M44 46 L76 46 L72 70 L48 70 Z" fill="#d5e4f0" opacity="0.9"/> <path d="M42 38 C50 24 72 24 80 40" fill="none" stroke="#c5d8e8" stroke-width="4.2" stroke-linecap="round"/> <circle cx="55" cy="48" r="1.7" fill="#3a5164"/> <circle cx="65" cy="48" r="1.7" fill="#3a5164"/> <circle cx="56" cy="47.2" r="0.5" fill="#fff"/> </svg>`,
+    korr: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true"> <defs> <linearGradient id="korr-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#efd09a"/><stop offset="1" stop-color="#4a3014"/></linearGradient> </defs> <ellipse cx="60" cy="150" rx="30" ry="5" fill="#000" opacity="0.24"/> <path d="M14 66 L106 66 L116 128 L4 128 Z" fill="url(#korr-corpo)"/> <rect x="38" y="82" width="44" height="9" fill="#8a6230"/> <rect x="42" y="100" width="36" height="8" fill="#8a6230"/> <path d="M28 78 L92 78" stroke="#2a1c10" stroke-width="2" opacity="0.25"/> <rect x="24" y="128" width="24" height="20" rx="2" fill="#2e2010"/> <rect x="72" y="128" width="24" height="20" rx="2" fill="#2e2010"/> <path d="M22 70 L4 110 L26 116 L42 80 Z" fill="#b8894a"/> <path d="M98 70 L118 102 L98 114 L82 80 Z" fill="#c99a58"/> <ellipse cx="60" cy="44" rx="17" ry="15" fill="#c4a06a"/> <rect x="46" y="40" width="28" height="9" rx="2" fill="#1c140c"/> <circle cx="54" cy="44.5" r="2.1" fill="#f0d48a"/> <circle cx="66" cy="44.5" r="2.1" fill="#f0d48a"/> <path d="M40 36 L48 28 L52 38" fill="#e2c48a"/> <path d="M80 36 L72 28 L68 38" fill="#e2c48a"/> </svg>`,
+    sile: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true"> <defs> <linearGradient id="sile-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2fdff"/><stop offset="1" stop-color="#2a6a92"/></linearGradient> </defs> <ellipse cx="60" cy="150" rx="18" ry="4.5" fill="#000" opacity="0.16"/> <path d="M88 16 L94 148" stroke="#9ad4f0" stroke-width="3.2" stroke-linecap="round"/> <polygon points="94,16 108,34 94,30 80,34" fill="#c4f0ff"/> <circle class="rival-orbe" cx="94" cy="16" r="6.5" fill="#e8ffff"/> <circle class="rival-orbe" cx="94" cy="16" r="10" fill="none" stroke="#c4f0ff" stroke-width="1" opacity="0.5"/> <path d="M48 72 L72 72 L76 120 L44 120 Z" fill="url(#sile-corpo)"/> <path d="M50 90 L74 90" stroke="#e8fbff" stroke-width="1.2" opacity="0.35"/> <rect x="48" y="120" width="8" height="26" rx="2.5" fill="#163a52"/> <rect x="64" y="120" width="8" height="26" rx="2.5" fill="#163a52"/> <path d="M48 76 L30 112 L40 116 L54 84 Z" fill="#bfe8f8"/> <path d="M72 76 L86 66 L92 76 L74 88 Z" fill="#d7f4ff"/> <ellipse cx="60" cy="42" rx="13.5" ry="14.5" fill="#f6fdff"/> <path d="M44 40 C48 6 86 6 78 44 C70 26 50 26 44 40 Z" fill="#d8f0ff"/> <circle cx="55" cy="43" r="1.7" fill="#245a78"/> <circle cx="65" cy="43" r="1.7" fill="#245a78"/> <circle cx="56" cy="42.2" r="0.5" fill="#fff"/> </svg>`,
+    ravo: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true"> <defs> <linearGradient id="ravo-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a78"/><stop offset="1" stop-color="#5a0c0c"/></linearGradient> </defs> <ellipse cx="60" cy="150" rx="26" ry="5" fill="#000" opacity="0.22"/> <path d="M22 64 L98 64 L108 120 L12 120 Z" fill="url(#ravo-corpo)"/> <path d="M30 88 L90 88" stroke="#ffcc66" stroke-width="2" opacity="0.35"/> <rect x="30" y="120" width="20" height="26" rx="3" fill="#2a0808"/> <rect x="70" y="120" width="20" height="26" rx="3" fill="#2a0808"/> <path d="M26 70 L4 94 L22 110 L44 80 Z" fill="#d94a32"/> <path d="M94 70 L118 86 L108 110 L80 80 Z" fill="#ff6a40"/> <path d="M16 88 L2 78 L20 98" fill="#ffcc66"/> <path d="M110 82 L122 68 L114 98" fill="#ffcc66"/> <ellipse cx="60" cy="40" rx="18" ry="16" fill="#4a1210"/> <path d="M46 28 L52 6 L58 30 Z" fill="#ff5a3a"/> <path d="M58 26 L62 2 L68 28 Z" fill="#ffd36a"/> <path d="M68 28 L76 8 L80 30 Z" fill="#ff5a3a"/> <circle cx="54" cy="42" r="2.3" fill="#ffe08a"/> <circle cx="68" cy="42" r="2.3" fill="#ffe08a"/> <path d="M50 52 Q60 58 70 52" fill="none" stroke="#8a2018" stroke-width="1.4"/> </svg>`,
+    neme: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true"> <defs> <linearGradient id="neme-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a8ffe4"/><stop offset="1" stop-color="#062420"/></linearGradient> </defs> <ellipse cx="58" cy="150" rx="18" ry="4" fill="#000" opacity="0.2"/> <path d="M38 86 L80 76 L88 128 L30 134 Z" fill="url(#neme-corpo)"/> <path d="M42 104 L78 96" stroke="#7dffd4" stroke-width="1.2" opacity="0.35"/> <rect x="38" y="128" width="11" height="20" rx="2" fill="#061816"/> <rect x="62" y="124" width="11" height="24" rx="2" fill="#061816"/> <path d="M40 90 L18 120 L30 124 L50 96 Z" fill="#1a5c54"/> <path d="M78 82 L110 64 L116 74 L82 94 Z" fill="#3ae0c0"/> <path d="M110 64 L122 54 L116 78 Z" fill="#d7fff4"/> <ellipse cx="58" cy="56" rx="13.5" ry="12.5" fill="#0c2420"/> <path d="M44 54 L72 50 L70 66 L46 68 Z" fill="#163a34"/> <path d="M42 48 C50 36 70 34 76 50" fill="none" stroke="#0a2e2a" stroke-width="4"/> <circle cx="53" cy="58" r="1.8" fill="#7dffd4"/> <circle cx="64" cy="56" r="1.8" fill="#7dffd4"/> <circle cx="54.2" cy="57.2" r="0.5" fill="#fff"/> </svg>`,
+    orvane: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true"> <defs> <linearGradient id="orvane-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6de9a"/><stop offset="1" stop-color="#22100e"/></linearGradient> </defs> <ellipse cx="60" cy="150" rx="26" ry="5" fill="#000" opacity="0.22"/> <path d="M86 54 C110 80 114 132 88 152 L58 118 Z" fill="#3a1614" opacity="0.92"/> <path d="M24 68 L96 68 L104 124 L16 124 Z" fill="url(#orvane-corpo)"/> <path d="M32 92 L88 92" stroke="#e0c070" stroke-width="2" opacity="0.35"/> <rect x="30" y="124" width="20" height="22" rx="2" fill="#140a08"/> <rect x="70" y="124" width="20" height="22" rx="2" fill="#140a08"/> <path d="M28 72 L8 106 L26 112 L44 80 Z" fill="#c9a45a"/> <path d="M92 72 L114 96 L98 110 L76 80 Z" fill="#e0c070"/> <path d="M36 38 L60 14 L84 38 L76 70 L44 70 Z" fill="#241614"/> <path d="M50 34 L60 20 L70 34" fill="#e8c36a"/> <rect x="46" y="42" width="28" height="11" rx="2" fill="#100808"/> <circle cx="54" cy="47.5" r="2.1" fill="#e8c36a"/> <circle cx="66" cy="47.5" r="2.1" fill="#e8c36a"/> </svg>`,
+    aurenegra: `<svg class="lutador__svg" viewBox="0 0 120 160" aria-hidden="true"> <defs> <linearGradient id="aure-corpo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0d48a"/><stop offset="1" stop-color="#14061c"/></linearGradient> <radialGradient id="aure-halo" cx="50%" cy="45%" r="50%"> <stop offset="0" stop-color="#e8c36a" stop-opacity="0.35"/> <stop offset="1" stop-color="#e8c36a" stop-opacity="0"/> </radialGradient> </defs> <ellipse cx="60" cy="150" rx="26" ry="5" fill="#000" opacity="0.24"/> <circle cx="60" cy="48" r="32" fill="url(#aure-halo)"/> <circle cx="60" cy="48" r="27" fill="none" stroke="#e8c36a" stroke-width="2.4" opacity="0.75"/> <path d="M60 18 C12 50 16 130 38 154 C52 118 54 86 60 62 C66 86 68 118 82 154 C104 130 108 50 60 18 Z" fill="url(#aure-corpo)"/> <path d="M34 34 L60 8 L86 34 L76 26 L60 18 L44 26 Z" fill="#e8c36a"/> <ellipse cx="60" cy="50" rx="12.5" ry="13.5" fill="#f6ead8"/> <path d="M48 46 L72 46 L68 62 L52 62 Z" fill="#100810"/> <circle cx="55" cy="51" r="1.9" fill="#b08cff"/> <circle cx="65" cy="51" r="1.9" fill="#b08cff"/> <circle cx="56.2" cy="50.2" r="0.55" fill="#fff"/> <circle class="rival-orbe" cx="20" cy="86" r="6.5" fill="#e8c36a"/> <circle class="rival-orbe" cx="100" cy="90" r="6.5" fill="#b08cff"/> </svg>`,
   };
 
   const MELHORIAS = [
