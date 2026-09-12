@@ -2,7 +2,7 @@
 (() => {
   "use strict";
 
-  const VERSAO = "1.5.0";
+  const VERSAO = "1.5.1";
   const CHAVE = "duelo-rapido";
   const TOTAL_CIRCULOS = 10;
 
@@ -1295,8 +1295,9 @@
     els.txtVez.textContent = TEXTO.vezInimigo;
     setVezInimigo(true);
     pintarHud();
-    // Tempo suficiente pra ler no celular: destaque + texto antes da ação do rival.
-    await esperar(1000);
+    els.txtVez.textContent = TEXTO.vezInimigo;
+    void els.txtVez.offsetWidth;
+    await esperar(1100);
     const acaoIA = escolherAcaoIA();
     await resolverAcao("inimigo", acaoIA);
     const recapInimigo = els.relato.textContent;
@@ -1323,6 +1324,7 @@
   }
 
   function novaCampanha() {
+    apagarCampanha();
     estado.circulo = 0;
     estado.fase = "luta";
     estado.jogador = clonarLutador(NARA);
@@ -1434,6 +1436,7 @@
       ev.preventDefault();
       ev.stopPropagation();
       if (!els.modalTutorial.hidden) return;
+      apagarCampanha();
       garantirAudio();
       if (estado.audio) estado.audio.ui();
       mostrarTutorial(novaCampanha);

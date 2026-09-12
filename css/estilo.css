@@ -1523,3 +1523,15 @@ button:focus-visible,
 .placa {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
 }
+
+
+/* 1.5.1 — retratos do título não roubam clique dos botões */
+.titulo-art,
+.titulo-art * {
+  pointer-events: none;
+}
+.titulo-acoes,
+.titulo-acoes * {
+  position: relative;
+  z-index: 5;
+}
